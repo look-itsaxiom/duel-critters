@@ -17,10 +17,11 @@ export async function POST(request: NextRequest) {
     const base64 = buffer.toString('base64')
     const mimeType = file.type || 'image/jpeg'
 
+    // Identify first — only upload the photo if identification succeeds
+    const identification = await identifyCreature(base64, mimeType)
+
     const filename = `${nanoid()}.jpg`
     const photoUrl = await uploadPhoto(buffer, filename)
-
-    const identification = await identifyCreature(base64, mimeType)
 
     return NextResponse.json({
       ...identification,
