@@ -1,6 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import type { CreatureIdentification, Ability } from './types'
 
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ValidationError'
+  }
+}
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 // --- Creature Identification ---
@@ -16,13 +23,32 @@ export async function identifyCreature(
       inlineData: { data: imageBase64, mimeType },
     },
     {
-      text: `You are looking at a small resin or plastic critter figurine.
+      text: `You are the registration clerk for Duel Critters, a tabletop tactics game played with small figurines on a grid board.
 
-Identify what creature this is and respond with ONLY valid JSON in this exact format:
+FIRST, decide if this image shows a valid critter. A valid critter is:
+- A small figurine, toy, or statue of a creature (animal, monster, fantasy beast, etc.)
+- Small enough to fit on a single chessboard square (roughly 2 inches / 5 cm or smaller)
+- Made of resin, plastic, rubber, clay, wood, glass, metal, or similar craft material
+- It can be a real animal type OR a fantasy/mythical creature — as long as it's a figurine
+
+REJECT the image if it is:
+- A real live animal or person (not a figurine)
+- Something that isn't a creature at all (a car, food, building, phone, etc.)
+- Way too large to fit on a chessboard square (a stuffed animal the size of a pillow, a full action figure, etc.)
+- A blurry or unrecognizable image
+
+Respond with ONLY valid JSON. If the image is NOT a valid critter:
 {
-  "name": "A short unique proper name, 1-2 words max (e.g., 'Blitz', 'Fangsworth', 'Clover', 'Spike', 'Nimbus')",
+  "valid": false,
+  "reason": "A short kid-friendly reason why this can't be registered (1 sentence)"
+}
+
+If the image IS a valid critter:
+{
+  "valid": true,
+  "name": "A short unique proper name, 1-2 words max (e.g., 'Blitz', 'Fangsworth', 'Clover')",
   "creatureType": "the animal type in lowercase (e.g., 'triceratops', 'chicken', 'capybara')",
-  "characteristics": ["3-5 physical traits like 'horned', 'winged', 'four-legged', 'translucent', 'small']
+  "characteristics": ["3-5 physical traits like 'horned', 'winged', 'four-legged', 'translucent', 'small"]
 }
 
 IMPORTANT name rules:
@@ -39,7 +65,18 @@ IMPORTANT name rules:
   if (!jsonMatch) {
     throw new Error('Failed to parse creature identification from AI response')
   }
-  return JSON.parse(jsonMatch[0]) as CreatureIdentification
+
+  const parsed = JSON.parse(jsonMatch[0])
+
+  if (parsed.valid === false) {
+    throw new ValidationError(parsed.reason || 'That doesn\u2019t look like a critter figurine!')
+  }
+
+  return {
+    name: parsed.name,
+    creatureType: parsed.creatureType,
+    characteristics: parsed.characteristics,
+  } as CreatureIdentification
 }
 
 // --- Ability Generation ---

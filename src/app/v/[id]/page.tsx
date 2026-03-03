@@ -26,6 +26,9 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
             Verified Critter
           </div>
           <h1 className="font-display text-3xl font-bold text-gray-900">{critter.name}</h1>
+          {critter.nickname && (
+            <div className="text-sm text-gray-500 italic">&ldquo;{critter.nickname}&rdquo;</div>
+          )}
           <div className="text-xl text-amber-500">{stars}</div>
         </div>
 

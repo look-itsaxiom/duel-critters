@@ -8,7 +8,7 @@ import { checkAbility, abilityMagnitude } from '@/lib/generation'
 import { generateQRDataUrl } from '@/lib/qr'
 import type { CritterRecord, CreatureIdentification } from '@/lib/types'
 
-type Step = 'upload' | 'identifying' | 'rolling' | 'certifying' | 'done'
+type Step = 'upload' | 'identifying' | 'review' | 'rolling' | 'certifying' | 'done'
 type RollingPhase = 'star-level' | 'hp' | 'atk' | 'spd' | 'ability-check' | 'complete'
 
 const PHASE_ORDER: RollingPhase[] = ['star-level', 'hp', 'atk', 'spd', 'ability-check', 'complete']
@@ -27,6 +27,7 @@ function phaseLabel(phase: RollingPhase): string {
 const STEP_COLORS = [
   { dot: 'bg-critter-pink', ring: 'ring-pink-300' },
   { dot: 'bg-critter-orange', ring: 'ring-orange-300' },
+  { dot: 'bg-critter-sky', ring: 'ring-sky-300' },
   { dot: 'bg-critter-amber', ring: 'ring-amber-300' },
   { dot: 'bg-critter-green', ring: 'ring-green-300' },
   { dot: 'bg-critter-violet', ring: 'ring-violet-300' },
@@ -56,6 +57,8 @@ export default function GeneratePage() {
     abilityCheckRoll: null,
     abilityPassed: null,
   })
+  const [nickname, setNickname] = useState('')
+  const [correctedType, setCorrectedType] = useState('')
   const [critter, setCritter] = useState<CritterRecord | null>(null)
   const [qrDataUrl, setQrDataUrl] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -84,7 +87,8 @@ export default function GeneratePage() {
 
       const data = await res.json()
       setIdentification(data)
-      setStep('rolling')
+      setCorrectedType(data.creatureType)
+      setStep('review')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to identify creature')
       setStep('upload')
@@ -144,7 +148,8 @@ export default function GeneratePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: identification.name,
-          creatureType: identification.creatureType,
+          ...(nickname.trim() ? { nickname: nickname.trim() } : {}),
+          creatureType: correctedType || identification.creatureType,
           characteristics: identification.characteristics,
           starLevel: stats.starLevel,
           hp: stats.hp,
@@ -177,7 +182,7 @@ export default function GeneratePage() {
       setStep('rolling')
       setRollingPhase('complete')
     }
-  }, [identification, stats])
+  }, [identification, stats, nickname, correctedType])
 
   // Get the dice notation for the current rolling phase
   function getNotation(): string {
@@ -203,7 +208,7 @@ export default function GeneratePage() {
     }
   }
 
-  const allSteps: Step[] = ['upload', 'identifying', 'rolling', 'certifying', 'done']
+  const allSteps: Step[] = ['upload', 'identifying', 'review', 'rolling', 'certifying', 'done']
   const currentStepIdx = allSteps.indexOf(step)
 
   return (
@@ -230,7 +235,7 @@ export default function GeneratePage() {
                     : 'bg-gray-200'
                 }`}
               />
-              {i < 4 && (
+              {i < allSteps.length - 1 && (
                 <div className={`w-8 h-1 rounded-full transition-colors duration-300 ${
                   currentStepIdx > i ? 'bg-gradient-to-r from-critter-pink to-critter-orange' : 'bg-gray-200'
                 }`} />
@@ -272,6 +277,88 @@ export default function GeneratePage() {
               <div className="animate-spin rounded-full h-14 w-14 border-4 border-orange-400 border-t-transparent" />
             </div>
             <p className="text-gray-500 font-medium">Our AI is examining your creature...</p>
+          </div>
+        )}
+
+        {/* Step: Review — correct creature type + add nickname */}
+        {step === 'review' && identification && (
+          <div className="space-y-6 animate-fade-up">
+            <h2 className="font-display text-2xl font-bold text-center text-sky-600">
+              Review Your Critter
+            </h2>
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-sky-200">
+              {/* Photo + AI name */}
+              <div className="flex items-center gap-4 mb-6">
+                {photoPreview && (
+                  <img
+                    src={photoPreview}
+                    alt={identification.name}
+                    className="w-20 h-20 rounded-xl object-cover border-2 border-amber-100"
+                  />
+                )}
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-gray-400">AI Named</div>
+                  <h3 className="font-display font-bold text-xl text-amber-900">{identification.name}</h3>
+                </div>
+              </div>
+
+              {/* Creature type correction */}
+              <div className="mb-4">
+                <label htmlFor="creature-type" className="block text-sm font-bold text-gray-600 mb-1">
+                  What kind of creature is this?
+                </label>
+                <input
+                  id="creature-type"
+                  type="text"
+                  value={correctedType}
+                  onChange={(e) => setCorrectedType(e.target.value)}
+                  className="w-full rounded-xl border-2 border-gray-200 px-4 py-2 text-gray-800 font-medium
+                             focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100
+                             transition-colors"
+                  placeholder="e.g. Dragon, Wolf, Bunny..."
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Fix this if the AI got it wrong
+                </p>
+              </div>
+
+              {/* Nickname input */}
+              <div className="mb-2">
+                <label htmlFor="nickname" className="block text-sm font-bold text-gray-600 mb-1">
+                  Nickname <span className="font-normal text-gray-400">(optional)</span>
+                </label>
+                <input
+                  id="nickname"
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                  maxLength={20}
+                  className="w-full rounded-xl border-2 border-gray-200 px-4 py-2 text-gray-800 font-medium
+                             focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100
+                             transition-colors"
+                  placeholder="Give your critter a nickname..."
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  if (correctedType.trim()) {
+                    setIdentification({ ...identification, creatureType: correctedType.trim() })
+                  }
+                  setStep('rolling')
+                }}
+                disabled={!correctedType.trim()}
+                className="px-10 py-4 bg-gradient-to-r from-sky-400 to-blue-500 text-white text-lg
+                           font-display font-bold rounded-2xl shadow-lg shadow-sky-200
+                           hover:shadow-xl hover:shadow-sky-300 hover:scale-105
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-all duration-200 active:scale-95"
+              >
+                Looks Good! Roll the Dice
+              </button>
+            </div>
           </div>
         )}
 
@@ -438,6 +525,8 @@ export default function GeneratePage() {
                     abilityCheckRoll: null,
                     abilityPassed: null,
                   })
+                  setNickname('')
+                  setCorrectedType('')
                   setCritter(null)
                   setQrDataUrl('')
                   setError(null)

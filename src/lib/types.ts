@@ -7,6 +7,7 @@ export interface Ability {
 export interface CritterRecord {
   id: string
   name: string
+  nickname?: string
   creatureType: string
   characteristics: string[]
   starLevel: number

@@ -7,13 +7,13 @@ import type { CritterRecord } from '@/lib/types'
 
 export async function POST(request: NextRequest) {
   const body = await request.json() as {
-    name: string; creatureType: string; characteristics: string[]
+    name: string; nickname?: string; creatureType: string; characteristics: string[]
     starLevel: number; hp: number; hpDice: number[]
     atk: number; spd: number; qualifiesForAbility: boolean
     abilityMagnitude: number; photoUrl: string
   }
   const {
-    name, creatureType, characteristics, starLevel, hp, hpDice,
+    name, nickname, creatureType, characteristics, starLevel, hp, hpDice,
     atk, spd, qualifiesForAbility, abilityMagnitude, photoUrl,
   } = body
 
@@ -25,7 +25,9 @@ export async function POST(request: NextRequest) {
 
     const critter: CritterRecord = {
       id: generateCritterId(),
-      name, creatureType, characteristics, starLevel, hp, hpDice,
+      name,
+      ...(nickname ? { nickname } : {}),
+      creatureType, characteristics, starLevel, hp, hpDice,
       atk, spd,
       hasAbility: qualifiesForAbility,
       ability,

@@ -42,6 +42,11 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
       <h2 className="font-display text-center text-3xl font-bold text-amber-800 mb-1 print:text-2xl">
         {critter.name}
       </h2>
+      {critter.nickname && (
+        <p className="text-center text-sm text-amber-600 italic mb-1">
+          &ldquo;{critter.nickname}&rdquo;
+        </p>
+      )}
       <p className="text-center text-xl text-amber-500 mb-4 print:mb-2">
         {starString(critter.starLevel)}
       </p>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { identifyCreature } from '@/lib/gemini'
+import { identifyCreature, ValidationError } from '@/lib/gemini'
 import { uploadPhoto } from '@/lib/storage'
 import { nanoid } from 'nanoid'
 
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error('Identify API error:', err)
     const message = err instanceof Error ? err.message : 'Failed to identify creature'
-    return NextResponse.json({ error: message }, { status: 500 })
+    const status = err instanceof ValidationError ? 400 : 500
+    return NextResponse.json({ error: message }, { status })
   }
 }
