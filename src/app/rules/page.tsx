@@ -1,6 +1,15 @@
 'use client'
 
-import RulesSlideshow from '@/components/RulesSlideshow'
+import dynamic from 'next/dynamic'
+
+const RevealTutorial = dynamic(() => import('@/components/RevealTutorial'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center py-20">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-500" />
+    </div>
+  ),
+})
 
 function PrintButton() {
   return (
@@ -108,9 +117,9 @@ export default function RulesPage() {
         </div>
       </header>
 
-      {/* SCREEN: Interactive slideshow */}
+      {/* SCREEN: Interactive visual tutorial */}
       <div className="print:hidden">
-        <RulesSlideshow />
+        <RevealTutorial />
       </div>
 
       {/* PRINT: Full linear layout (hidden on screen, visible when printing) */}

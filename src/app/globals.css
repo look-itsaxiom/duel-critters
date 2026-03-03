@@ -144,4 +144,9 @@ body {
     background: white !important;
     color: black !important;
   }
+
+  .reveal,
+  .reveal-tutorial-wrapper {
+    display: none !important;
+  }
 }
