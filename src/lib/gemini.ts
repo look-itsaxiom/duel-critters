@@ -16,16 +16,21 @@ export async function identifyCreature(
       inlineData: { data: imageBase64, mimeType },
     },
     {
-      text: `You are looking at a small toy figurine (likely a resin or plastic animal).
+      text: `You are looking at a small resin or plastic critter figurine.
 
 Identify what creature this is and respond with ONLY valid JSON in this exact format:
 {
-  "name": "A fun name for this creature (e.g., 'Triceratops', 'Big Chicken', 'Capybara')",
+  "name": "A short unique proper name, 1-2 words max (e.g., 'Blitz', 'Fangsworth', 'Clover', 'Spike', 'Nimbus')",
   "creatureType": "the animal type in lowercase (e.g., 'triceratops', 'chicken', 'capybara')",
   "characteristics": ["3-5 physical traits like 'horned', 'winged', 'four-legged', 'translucent', 'small']
 }
 
-Use a playful, kid-friendly name. If it's clearly a specific animal, use that. If it's ambiguous or fantasy, pick the closest match with a fun twist.`,
+IMPORTANT name rules:
+- The name is a PROPER NAME for this individual critter, NOT a description of what it is.
+- Maximum 12 characters. One or two words only.
+- Think pet names, RPG character names, or mythical creature names.
+- Good: "Blitz", "Fangsworth", "Clover", "Spike", "Nimbus", "Rex", "Zara"
+- Bad: "Sparkly Pink Spider", "Big Fluffy Bear", "Small Green Frog" (these are descriptions, not names)`,
     },
   ])
 

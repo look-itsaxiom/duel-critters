@@ -145,8 +145,35 @@ body {
     color: black !important;
   }
 
+  nav,
   .reveal,
   .reveal-tutorial-wrapper {
     display: none !important;
+  }
+
+  /* Force certificate page to fit one 8.5x11 sheet */
+  .certificate-print-page {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .certificate-print-page .birth-cert {
+    max-width: 100% !important;
+    padding: 1rem !important;
+    margin: 0 auto !important;
+  }
+
+  .certificate-print-page .birth-cert img.critter-photo {
+    width: 100px !important;
+    height: 100px !important;
+  }
+
+  .certificate-print-page .birth-cert h1 {
+    font-size: 1.1rem !important;
+  }
+
+  .certificate-print-page .birth-cert h2 {
+    font-size: 1.5rem !important;
   }
 }

@@ -207,18 +207,18 @@ export default function GeneratePage() {
   const currentStepIdx = allSteps.indexOf(step)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-100 via-orange-50 to-yellow-50 bg-dots">
+    <div className="min-h-screen bg-gradient-to-b from-amber-100 via-orange-50 to-yellow-50 bg-dots print:bg-white print:min-h-0">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
-        <h1 className="font-display text-4xl font-bold text-center mb-2 text-amber-900 animate-fade-up">
+        <h1 className="font-display text-4xl font-bold text-center mb-2 text-amber-900 animate-fade-up print:hidden">
           Register a Critter
         </h1>
-        <p className="text-center text-amber-700/70 font-medium mb-8 animate-fade-up" style={{ animationDelay: '100ms' }}>
+        <p className="text-center text-amber-700/70 font-medium mb-8 animate-fade-up print:hidden" style={{ animationDelay: '100ms' }}>
           Snap a photo, roll the dice, and bring your critter to life!
         </p>
 
         {/* Progress indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8 animate-fade-up" style={{ animationDelay: '200ms' }}>
+        <div className="flex items-center justify-center gap-2 mb-8 animate-fade-up print:hidden" style={{ animationDelay: '200ms' }}>
           {allSteps.map((s, i) => (
             <div key={s} className="flex items-center">
               <div

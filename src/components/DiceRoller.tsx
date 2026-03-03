@@ -91,7 +91,7 @@ export default function DiceRoller({ notation, label, onResult, disabled }: Dice
       <div
         ref={containerRef}
         id="dice-canvas"
-        className="relative w-80 h-48 bg-gray-900 rounded-lg overflow-hidden"
+        className="relative w-full max-w-lg h-72 bg-gray-900 rounded-xl overflow-hidden"
       />
       <button
         onClick={roll}
