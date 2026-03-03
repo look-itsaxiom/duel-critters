@@ -76,8 +76,10 @@ export default function GeneratePage() {
       })
 
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to identify creature')
+        const text = await res.text()
+        let message = 'Failed to identify creature'
+        try { message = JSON.parse(text).error || message } catch {}
+        throw new Error(message)
       }
 
       const data = await res.json()
@@ -156,8 +158,10 @@ export default function GeneratePage() {
       })
 
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to generate critter')
+        const text = await res.text()
+        let message = 'Failed to generate critter'
+        try { message = JSON.parse(text).error || message } catch {}
+        throw new Error(message)
       }
 
       const critterData: CritterRecord = await res.json()
@@ -247,7 +251,7 @@ export default function GeneratePage() {
           <div className="space-y-4 animate-fade-up">
             <h2 className="font-display text-2xl font-bold text-center text-pink-600">Step 1: Upload a Photo</h2>
             <p className="text-center text-gray-500 text-sm">
-              Take a picture of any creature - real or toy - and we will identify it!
+              Snap a photo of your resin critter figurine and we will identify it!
             </p>
             <PhotoUpload onUpload={handlePhotoUpload} />
           </div>

@@ -16,7 +16,7 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "Duel Critters",
   description:
-    "Turn your pet into a battle-ready critter card. Upload a photo, roll stats with 3D dice, print a certificate, and duel your friends!",
+    "Turn your resin critter figurine into a battle-ready card. Upload a photo, roll stats with 3D dice, print a certificate, and duel your friends!",
 };
 
 export default function RootLayout({

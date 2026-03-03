@@ -66,8 +66,8 @@ export default function PhotoUpload({ onUpload, disabled }: PhotoUploadProps) {
       ) : (
         <div className="space-y-2">
           <div className="text-4xl">📸</div>
-          <p className="text-lg font-medium">Drop your critter photo here</p>
-          <p className="text-sm text-gray-500">or tap to take a picture</p>
+          <p className="text-lg font-medium">Drop a photo of your figurine here</p>
+          <p className="text-sm text-gray-500">or tap to snap a picture</p>
         </div>
       )}
     </div>

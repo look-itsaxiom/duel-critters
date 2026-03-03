@@ -54,8 +54,8 @@ export default function Home() {
             Got a critter? Make it real.
           </h1>
           <p className="max-w-md text-lg font-medium text-amber-900/70">
-            Turn your favorite pet, plushie, or imaginary beast into a
-            battle-ready critter card -- then duel your friends!
+            Snap a photo of your little resin critter figurine, roll its
+            stats, print its card -- then duel your friends!
           </p>
         </div>
 
