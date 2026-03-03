@@ -1,5 +1,7 @@
 'use client'
 
+import RulesSlideshow from '@/components/RulesSlideshow'
+
 function PrintButton() {
   return (
     <button
@@ -46,6 +48,8 @@ function BackLink() {
   )
 }
 
+/* ─── Print-only helpers (identical to original layout) ─── */
+
 function SectionCard({
   icon,
   title,
@@ -58,7 +62,7 @@ function SectionCard({
   children: React.ReactNode
 }) {
   return (
-    <section className={`rounded-2xl border-2 ${color} bg-white p-6 shadow-sm transition-transform duration-200 hover:shadow-md print:border-gray-300 print:shadow-none print:break-inside-avoid`}>
+    <section className={`rounded-2xl border-2 ${color} bg-white p-6 shadow-sm print:border-gray-300 print:shadow-none print:break-inside-avoid`}>
       <h2 className="font-display mb-3 flex items-center gap-2 text-xl font-bold text-gray-900">
         <span className="text-2xl" role="img" aria-hidden="true">
           {icon}
@@ -104,9 +108,15 @@ export default function RulesPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 print:py-4">
+      {/* SCREEN: Interactive slideshow */}
+      <div className="print:hidden">
+        <RulesSlideshow />
+      </div>
+
+      {/* PRINT: Full linear layout (hidden on screen, visible when printing) */}
+      <main className="mx-auto hidden max-w-3xl px-4 py-8 sm:px-6 print:block print:py-4">
         {/* Quick Reference Card */}
-        <div className="mb-8 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-6 shadow-sm print:border-emerald-400 print:bg-white print:break-inside-avoid">
+        <div className="mb-8 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-6 print:border-emerald-400 print:bg-white print:break-inside-avoid">
           <h2 className="font-display mb-3 text-lg font-bold text-emerald-900">
             Quick Reference
           </h2>
@@ -133,8 +143,7 @@ export default function RulesPage() {
         </div>
 
         {/* Rules Sections */}
-        <div className="stagger-children space-y-6">
-          {/* Setup */}
+        <div className="space-y-6">
           <SectionCard icon="🎲" title="Setup" color="border-amber-200">
             <RuleList
               items={[
@@ -148,7 +157,6 @@ export default function RulesPage() {
             />
           </SectionCard>
 
-          {/* Turn Structure */}
           <SectionCard icon="🔄" title="Turn Structure" color="border-sky-200">
             <RuleList
               items={[
@@ -159,7 +167,6 @@ export default function RulesPage() {
             />
           </SectionCard>
 
-          {/* Movement */}
           <SectionCard icon="🏃" title="Movement" color="border-green-200">
             <RuleList
               items={[
@@ -172,7 +179,6 @@ export default function RulesPage() {
             />
           </SectionCard>
 
-          {/* Combat */}
           <SectionCard icon="⚔️" title="Combat" color="border-red-200">
             <RuleList
               items={[
@@ -190,7 +196,6 @@ export default function RulesPage() {
             </div>
           </SectionCard>
 
-          {/* Line of Sight */}
           <SectionCard icon="👁️" title="Line of Sight" color="border-violet-200">
             <RuleList
               items={[
@@ -202,7 +207,6 @@ export default function RulesPage() {
             />
           </SectionCard>
 
-          {/* Abilities */}
           <SectionCard icon="✨" title="Abilities" color="border-purple-200">
             <RuleList
               items={[
@@ -214,7 +218,6 @@ export default function RulesPage() {
             />
           </SectionCard>
 
-          {/* Scoring & Winning */}
           <SectionCard icon="🏆" title="Scoring & Winning" color="border-amber-200">
             <div className="space-y-3">
               <p className="font-medium text-gray-800">
