@@ -1,6 +1,7 @@
 import { getCritter } from '@/lib/storage'
 import { notFound } from 'next/navigation'
 import DicePips from '@/components/DicePips'
+import ReprintSection from '@/components/ReprintSection'
 
 interface VerifyPageProps {
   params: Promise<{ id: string }>
@@ -17,8 +18,9 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
   const stars = '\u2605'.repeat(critter.starLevel) + '\u2606'.repeat(6 - critter.starLevel)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 via-emerald-50 to-teal-50 bg-dots py-8 px-4">
-      <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg border-2 border-green-200 p-6 animate-pop">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 via-emerald-50 to-teal-50 bg-dots py-8 px-4 print:bg-white print:py-0">
+      {/* Verify card — hidden when printing */}
+      <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg border-2 border-green-200 p-6 animate-pop print:hidden">
         <div className="text-center mb-4">
           <div className="inline-block rounded-full bg-green-100 px-4 py-1 text-xs uppercase tracking-widest text-green-700 font-bold mb-2">
             Verified Critter
@@ -62,6 +64,11 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
         <div className="mt-4 text-center text-xs text-gray-400 font-mono">
           ID: {critter.id} | Registered {new Date(critter.createdAt).toLocaleDateString()}
         </div>
+      </div>
+
+      {/* Reprint section — outside the card so certificate has full width */}
+      <div className="mt-6 max-w-xl mx-auto print:mt-0">
+        <ReprintSection critter={critter} />
       </div>
     </div>
   )
