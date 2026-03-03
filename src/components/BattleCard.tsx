@@ -11,20 +11,19 @@ function starString(level: number): string {
 }
 
 function damageFormula(atk: number): string {
-  if (atk <= 0) return '0'
-  if (atk === 1) return '1d3'
-  return `${atk}d3`
+  if (atk <= 0) return '1d6'
+  return `1d6+${atk}`
 }
 
 export default function BattleCard({ critter, qrDataUrl }: BattleCardProps) {
   return (
     <div
-      className="border-2 border-gray-800 rounded-lg bg-white overflow-hidden flex flex-col mx-auto"
+      className="border-2 border-gray-800 rounded-xl bg-white overflow-hidden flex flex-col mx-auto"
       style={{ width: '2.5in', height: '3.5in' }}
     >
       {/* Header: name + stars */}
       <div className="bg-amber-600 text-white px-2 py-1 flex items-center justify-between">
-        <span className="font-bold text-sm truncate">{critter.name}</span>
+        <span className="font-bold text-sm truncate" style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}>{critter.name}</span>
         <span className="text-yellow-200 text-xs whitespace-nowrap ml-1">
           {starString(critter.starLevel)}
         </span>

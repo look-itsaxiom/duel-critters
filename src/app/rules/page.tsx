@@ -4,7 +4,7 @@ function PrintButton() {
   return (
     <button
       onClick={() => window.print()}
-      className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 active:bg-indigo-800 print:hidden"
+      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-green-200 transition-all duration-200 hover:scale-105 hover:shadow-lg print:hidden"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@ function BackLink() {
   return (
     <a
       href="/"
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-800 print:hidden"
+      className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-600 transition-colors hover:text-emerald-800 print:hidden"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -49,15 +49,17 @@ function BackLink() {
 function SectionCard({
   icon,
   title,
+  color,
   children,
 }: {
   icon: string
   title: string
+  color: string
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm print:border-gray-300 print:shadow-none print:break-inside-avoid">
-      <h2 className="mb-3 flex items-center gap-2 text-xl font-bold text-gray-900">
+    <section className={`rounded-2xl border-2 ${color} bg-white p-6 shadow-sm transition-transform duration-200 hover:shadow-md print:border-gray-300 print:shadow-none print:break-inside-avoid`}>
+      <h2 className="font-display mb-3 flex items-center gap-2 text-xl font-bold text-gray-900">
         <span className="text-2xl" role="img" aria-hidden="true">
           {icon}
         </span>
@@ -73,7 +75,7 @@ function RuleList({ items }: { items: string[] }) {
     <ul className="space-y-1.5 text-gray-700">
       {items.map((item, i) => (
         <li key={i} className="flex items-start gap-2">
-          <span className="mt-1.5 block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-indigo-400" />
+          <span className="mt-1.5 block h-2 w-2 flex-shrink-0 rounded-full bg-emerald-400" />
           <span>{item}</span>
         </li>
       ))}
@@ -83,20 +85,20 @@ function RuleList({ items }: { items: string[] }) {
 
 export default function RulesPage() {
   return (
-    <div className="min-h-screen bg-gray-50 print:bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-green-50 to-teal-50 bg-dots print:bg-white">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white print:border-b-2 print:border-gray-900">
+      <header className="border-b-2 border-emerald-200 bg-white/80 backdrop-blur print:border-b-2 print:border-gray-900">
         <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6">
           <div className="flex items-center justify-between">
             <BackLink />
             <PrintButton />
           </div>
           <div className="mt-4">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+            <h1 className="font-display text-4xl font-bold tracking-tight text-emerald-800 sm:text-5xl">
               Duel Critters Rules
             </h1>
-            <p className="mt-2 text-lg text-gray-500 print:text-gray-700">
-              The official rulebook for Duel Critters -- your creatures, your battlefield, your strategy!
+            <p className="mt-2 text-lg text-emerald-600/70 font-medium print:text-gray-700">
+              The official rulebook -- your creatures, your battlefield, your strategy!
             </p>
           </div>
         </div>
@@ -104,26 +106,26 @@ export default function RulesPage() {
 
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 print:py-4">
         {/* Quick Reference Card */}
-        <div className="mb-8 rounded-xl border-2 border-indigo-200 bg-indigo-50 p-6 print:border-indigo-400 print:bg-white print:break-inside-avoid">
-          <h2 className="mb-3 text-lg font-bold text-indigo-900">
+        <div className="mb-8 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-6 shadow-sm print:border-emerald-400 print:bg-white print:break-inside-avoid">
+          <h2 className="font-display mb-3 text-lg font-bold text-emerald-900">
             Quick Reference
           </h2>
           <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
             <div>
-              <p className="font-semibold text-indigo-800">Goal</p>
-              <p className="text-indigo-700">First to 3 Victory Points wins!</p>
+              <p className="font-bold text-emerald-800">Goal</p>
+              <p className="text-emerald-700">First to 3 Victory Points wins!</p>
             </div>
             <div>
-              <p className="font-semibold text-indigo-800">Team Size</p>
-              <p className="text-indigo-700">3 critters per player on an 8x10 grid</p>
+              <p className="font-bold text-emerald-800">Team Size</p>
+              <p className="text-emerald-700">3 critters per player on an 8x10 grid</p>
             </div>
             <div>
-              <p className="font-semibold text-indigo-800">Turn Actions</p>
-              <p className="text-indigo-700">Each critter can Move + Attack + Use Ability</p>
+              <p className="font-bold text-emerald-800">Turn Actions</p>
+              <p className="text-emerald-700">Each critter can Move + Attack + Use Ability</p>
             </div>
             <div>
-              <p className="font-semibold text-indigo-800">Scoring</p>
-              <p className="text-indigo-700">
+              <p className="font-bold text-emerald-800">Scoring</p>
+              <p className="text-emerald-700">
                 Defeat a critter = 1 VP | Raid enemy base = 1 VP
               </p>
             </div>
@@ -131,9 +133,9 @@ export default function RulesPage() {
         </div>
 
         {/* Rules Sections */}
-        <div className="space-y-6">
+        <div className="stagger-children space-y-6">
           {/* Setup */}
-          <SectionCard icon="🎲" title="Setup">
+          <SectionCard icon="🎲" title="Setup" color="border-amber-200">
             <RuleList
               items={[
                 'Each player picks a team of 3 critters.',
@@ -147,7 +149,7 @@ export default function RulesPage() {
           </SectionCard>
 
           {/* Turn Structure */}
-          <SectionCard icon="🔄" title="Turn Structure">
+          <SectionCard icon="🔄" title="Turn Structure" color="border-sky-200">
             <RuleList
               items={[
                 'Players take full team turns: you activate ALL 3 of your critters, then your opponent takes their turn.',
@@ -158,7 +160,7 @@ export default function RulesPage() {
           </SectionCard>
 
           {/* Movement */}
-          <SectionCard icon="🏃" title="Movement">
+          <SectionCard icon="🏃" title="Movement" color="border-green-200">
             <RuleList
               items={[
                 'A critter can move up to its SPD (speed) stat in grid squares.',
@@ -171,7 +173,7 @@ export default function RulesPage() {
           </SectionCard>
 
           {/* Combat */}
-          <SectionCard icon="⚔️" title="Combat">
+          <SectionCard icon="⚔️" title="Combat" color="border-red-200">
             <RuleList
               items={[
                 'A critter can attack any enemy that is adjacent (1 square away, including diagonals).',
@@ -181,15 +183,15 @@ export default function RulesPage() {
                 'Defeating a critter earns you 1 Victory Point.',
               ]}
             />
-            <div className="mt-3 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800 print:border print:border-amber-300">
-              <span className="font-semibold">Example:</span> Your critter has
+            <div className="mt-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800 border border-amber-200 print:border print:border-amber-300">
+              <span className="font-bold">Example:</span> Your critter has
               3 ATK. You roll a 4 on the d6. That is 4 + 3 = 7 damage to the
               enemy critter!
             </div>
           </SectionCard>
 
           {/* Line of Sight */}
-          <SectionCard icon="👁️" title="Line of Sight">
+          <SectionCard icon="👁️" title="Line of Sight" color="border-violet-200">
             <RuleList
               items={[
                 'Line of sight (LoS) is a straight, unobstructed line between two critters.',
@@ -201,7 +203,7 @@ export default function RulesPage() {
           </SectionCard>
 
           {/* Abilities */}
-          <SectionCard icon="✨" title="Abilities">
+          <SectionCard icon="✨" title="Abilities" color="border-purple-200">
             <RuleList
               items={[
                 'Each critter has a unique ability.',
@@ -213,28 +215,28 @@ export default function RulesPage() {
           </SectionCard>
 
           {/* Scoring & Winning */}
-          <SectionCard icon="🏆" title="Scoring & Winning">
+          <SectionCard icon="🏆" title="Scoring & Winning" color="border-amber-200">
             <div className="space-y-3">
               <p className="font-medium text-gray-800">
                 There are two ways to earn Victory Points (VP):
               </p>
               <div className="space-y-2">
-                <div className="flex items-start gap-3 rounded-lg bg-green-50 px-4 py-3 print:border print:border-green-300">
-                  <span className="text-lg font-bold text-green-700">1 VP</span>
+                <div className="flex items-start gap-3 rounded-xl bg-green-50 px-4 py-3 border border-green-200 print:border print:border-green-300">
+                  <span className="font-display text-lg font-bold text-green-600">1 VP</span>
                   <p className="text-sm text-green-800">
-                    <span className="font-semibold">Defeat a critter.</span>{' '}
+                    <span className="font-bold">Defeat a critter.</span>{' '}
                     Knock an enemy critter down to 0 HP.
                   </p>
                 </div>
-                <div className="flex items-start gap-3 rounded-lg bg-green-50 px-4 py-3 print:border print:border-green-300">
-                  <span className="text-lg font-bold text-green-700">1 VP</span>
+                <div className="flex items-start gap-3 rounded-xl bg-green-50 px-4 py-3 border border-green-200 print:border print:border-green-300">
+                  <span className="font-display text-lg font-bold text-green-600">1 VP</span>
                   <p className="text-sm text-green-800">
-                    <span className="font-semibold">Raid the enemy base.</span>{' '}
+                    <span className="font-bold">Raid the enemy base.</span>{' '}
                     Move into the enemy base when no defenders are inside, then spend your attack action to score.
                   </p>
                 </div>
               </div>
-              <p className="mt-2 text-center text-lg font-bold text-indigo-700 print:text-gray-900">
+              <p className="font-display mt-2 text-center text-lg font-bold text-emerald-600 print:text-gray-900">
                 First player to reach 3 Victory Points wins the game!
               </p>
             </div>
@@ -242,8 +244,8 @@ export default function RulesPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-10 border-t border-gray-200 pt-6 text-center print:mt-6 print:pt-4">
-          <p className="text-sm text-gray-400 print:text-gray-600">
+        <div className="mt-10 border-t-2 border-emerald-200 pt-6 text-center print:mt-6 print:pt-4">
+          <p className="text-sm text-emerald-400 font-medium print:text-gray-600">
             Duel Critters -- Have fun, play fair, and may the best critters win!
           </p>
         </div>

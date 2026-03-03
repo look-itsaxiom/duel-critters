@@ -33,8 +33,9 @@ export default function CertificatePage({ critter, qrDataUrl }: CertificatePageP
       <div className="mt-8 text-center print:hidden">
         <button
           onClick={() => window.print()}
-          className="px-8 py-3 bg-amber-500 text-white font-bold rounded-lg
-                     hover:bg-amber-600 transition-colors shadow-md"
+          className="px-8 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white
+                     font-display font-bold rounded-xl shadow-lg shadow-orange-200
+                     hover:shadow-xl hover:scale-105 transition-all duration-200"
         >
           Print Certificate
         </button>

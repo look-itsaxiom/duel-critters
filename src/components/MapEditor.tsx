@@ -26,10 +26,10 @@ function createEmptyGrid(): number[][] {
 }
 
 const TERRAIN_COLORS: Record<number, string> = {
-  0: 'bg-white hover:bg-gray-100',
-  1: 'bg-gray-700',
-  2: 'bg-red-200',
-  3: 'bg-blue-200',
+  0: 'bg-white hover:bg-sky-50',
+  1: 'bg-gray-700 shadow-inner',
+  2: 'bg-red-300',
+  3: 'bg-sky-300',
 }
 
 export default function MapEditor({ onSave }: MapEditorProps) {
@@ -58,16 +58,18 @@ export default function MapEditor({ onSave }: MapEditorProps) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Map name (e.g., Crystal Cavern)"
-        className="w-full px-4 py-2 border rounded-lg text-lg"
+        className="w-full px-4 py-3 border-2 border-sky-200 rounded-xl text-lg font-medium
+                   focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200
+                   placeholder:text-sky-300 transition-all"
       />
 
-      <div className="inline-block border-2 border-gray-800">
+      <div className="inline-block border-2 border-gray-700 rounded-xl overflow-hidden shadow-lg">
         {grid.map((row, rowIdx) => (
           <div key={rowIdx} className="flex">
             {row.map((cell, colIdx) => (
               <button
                 key={colIdx}
-                className={`w-10 h-10 border border-gray-300 ${TERRAIN_COLORS[cell]} transition-colors`}
+                className={`w-10 h-10 border border-gray-200 ${TERRAIN_COLORS[cell]} transition-colors duration-150`}
                 onClick={() => toggleCell(rowIdx, colIdx)}
               />
             ))}
@@ -75,26 +77,27 @@ export default function MapEditor({ onSave }: MapEditorProps) {
         ))}
       </div>
 
-      <div className="flex gap-4 text-sm text-gray-500">
-        <span className="flex items-center gap-1">
-          <span className="w-4 h-4 bg-white border inline-block" /> Open
+      <div className="flex gap-4 text-sm font-medium text-gray-500">
+        <span className="flex items-center gap-1.5">
+          <span className="w-5 h-5 bg-white border-2 border-gray-200 rounded inline-block" /> Open
         </span>
-        <span className="flex items-center gap-1">
-          <span className="w-4 h-4 bg-gray-700 inline-block" /> Obstacle
+        <span className="flex items-center gap-1.5">
+          <span className="w-5 h-5 bg-gray-700 rounded inline-block" /> Obstacle
         </span>
-        <span className="flex items-center gap-1">
-          <span className="w-4 h-4 bg-red-200 inline-block" /> Red Base
+        <span className="flex items-center gap-1.5">
+          <span className="w-5 h-5 bg-red-300 rounded inline-block" /> Red Base
         </span>
-        <span className="flex items-center gap-1">
-          <span className="w-4 h-4 bg-blue-200 inline-block" /> Blue Base
+        <span className="flex items-center gap-1.5">
+          <span className="w-5 h-5 bg-sky-300 rounded inline-block" /> Blue Base
         </span>
       </div>
 
       <button
         onClick={handleSave}
         disabled={!name.trim()}
-        className="px-6 py-2 bg-amber-500 text-white font-bold rounded-lg
-                   hover:bg-amber-600 disabled:opacity-50 transition-colors"
+        className="px-8 py-3 bg-gradient-to-r from-sky-400 to-blue-500 text-white font-display font-bold
+                   rounded-xl shadow-lg shadow-sky-200 hover:shadow-xl hover:scale-105
+                   disabled:opacity-50 disabled:hover:scale-100 transition-all duration-200"
       >
         Save Map
       </button>

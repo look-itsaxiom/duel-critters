@@ -24,6 +24,14 @@ function phaseLabel(phase: RollingPhase): string {
   }
 }
 
+const STEP_COLORS = [
+  { dot: 'bg-critter-pink', ring: 'ring-pink-300' },
+  { dot: 'bg-critter-orange', ring: 'ring-orange-300' },
+  { dot: 'bg-critter-amber', ring: 'ring-amber-300' },
+  { dot: 'bg-critter-green', ring: 'ring-green-300' },
+  { dot: 'bg-critter-violet', ring: 'ring-violet-300' },
+]
+
 interface RollingStats {
   starLevel: number | null
   hp: number | null
@@ -191,45 +199,53 @@ export default function GeneratePage() {
     }
   }
 
+  const allSteps: Step[] = ['upload', 'identifying', 'rolling', 'certifying', 'done']
+  const currentStepIdx = allSteps.indexOf(step)
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-amber-100 via-orange-50 to-yellow-50 bg-dots">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-center mb-2">Generate a Critter</h1>
-        <p className="text-center text-gray-500 mb-8">
+        <h1 className="font-display text-4xl font-bold text-center mb-2 text-amber-900 animate-fade-up">
+          Register a Critter
+        </h1>
+        <p className="text-center text-amber-700/70 font-medium mb-8 animate-fade-up" style={{ animationDelay: '100ms' }}>
           Snap a photo, roll the dice, and bring your critter to life!
         </p>
 
         {/* Progress indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          {(['upload', 'identifying', 'rolling', 'certifying', 'done'] as Step[]).map((s, i) => (
+        <div className="flex items-center justify-center gap-2 mb-8 animate-fade-up" style={{ animationDelay: '200ms' }}>
+          {allSteps.map((s, i) => (
             <div key={s} className="flex items-center">
               <div
-                className={`w-3 h-3 rounded-full transition-colors ${
+                className={`w-4 h-4 rounded-full transition-all duration-300 ${
                   step === s
-                    ? 'bg-amber-500 ring-2 ring-amber-300'
-                    : PHASE_ORDER.indexOf(rollingPhase) >= 0 &&
-                      (['upload', 'identifying', 'rolling', 'certifying', 'done'] as Step[]).indexOf(step) > i
-                    ? 'bg-amber-400'
-                    : 'bg-gray-300'
+                    ? `${STEP_COLORS[i].dot} ring-4 ${STEP_COLORS[i].ring} scale-110`
+                    : currentStepIdx > i
+                    ? STEP_COLORS[i].dot
+                    : 'bg-gray-200'
                 }`}
               />
-              {i < 4 && <div className="w-8 h-0.5 bg-gray-300" />}
+              {i < 4 && (
+                <div className={`w-8 h-1 rounded-full transition-colors duration-300 ${
+                  currentStepIdx > i ? 'bg-gradient-to-r from-critter-pink to-critter-orange' : 'bg-gray-200'
+                }`} />
+              )}
             </div>
           ))}
         </div>
 
         {/* Error display */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-center">
+          <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-700 text-center font-medium animate-pop">
             {error}
           </div>
         )}
 
         {/* Step: Upload */}
         {step === 'upload' && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-center">Step 1: Upload a Photo</h2>
+          <div className="space-y-4 animate-fade-up">
+            <h2 className="font-display text-2xl font-bold text-center text-pink-600">Step 1: Upload a Photo</h2>
             <p className="text-center text-gray-500 text-sm">
               Take a picture of any creature - real or toy - and we will identify it!
             </p>
@@ -239,19 +255,19 @@ export default function GeneratePage() {
 
         {/* Step: Identifying */}
         {step === 'identifying' && (
-          <div className="text-center space-y-6">
-            <h2 className="text-xl font-semibold">Identifying Your Critter...</h2>
+          <div className="text-center space-y-6 animate-fade-up">
+            <h2 className="font-display text-2xl font-bold text-orange-600">Identifying Your Critter...</h2>
             {photoPreview && (
               <img
                 src={photoPreview}
                 alt="Uploaded critter"
-                className="mx-auto max-h-48 rounded-lg object-contain shadow-md"
+                className="mx-auto max-h-48 rounded-2xl object-contain shadow-lg border-2 border-orange-200"
               />
             )}
             <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent" />
+              <div className="animate-spin rounded-full h-14 w-14 border-4 border-orange-400 border-t-transparent" />
             </div>
-            <p className="text-gray-500">Our AI is examining your creature...</p>
+            <p className="text-gray-500 font-medium">Our AI is examining your creature...</p>
           </div>
         )}
 
@@ -259,23 +275,23 @@ export default function GeneratePage() {
         {step === 'rolling' && identification && (
           <div className="space-y-6">
             {/* Creature info card */}
-            <div className="bg-white rounded-xl shadow-md p-4 flex items-center gap-4">
+            <div className="bg-white rounded-2xl shadow-lg p-4 flex items-center gap-4 border-2 border-amber-200 animate-pop">
               {photoPreview && (
                 <img
                   src={photoPreview}
                   alt={identification.name}
-                  className="w-16 h-16 rounded-lg object-cover"
+                  className="w-16 h-16 rounded-xl object-cover border-2 border-amber-100"
                 />
               )}
               <div>
-                <h3 className="font-bold text-lg">{identification.name}</h3>
-                <p className="text-sm text-gray-500">{identification.creatureType}</p>
+                <h3 className="font-display font-bold text-xl text-amber-900">{identification.name}</h3>
+                <p className="text-sm text-amber-600">{identification.creatureType}</p>
               </div>
             </div>
 
             {/* Stats summary card */}
-            <div className="bg-white rounded-xl shadow-md p-4">
-              <h3 className="font-semibold text-sm uppercase tracking-wide text-gray-400 mb-3">
+            <div className="bg-white rounded-2xl shadow-lg p-4 border-2 border-gray-100">
+              <h3 className="font-display font-bold text-sm uppercase tracking-wide text-gray-400 mb-3">
                 Stats Rolled
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -283,21 +299,25 @@ export default function GeneratePage() {
                   label="Star Level"
                   value={stats.starLevel}
                   active={rollingPhase === 'star-level'}
+                  color="amber"
                 />
                 <StatDisplay
                   label="HP"
                   value={stats.hp}
                   active={rollingPhase === 'hp'}
+                  color="red"
                 />
                 <StatDisplay
                   label="ATK"
                   value={stats.atk}
                   active={rollingPhase === 'atk'}
+                  color="orange"
                 />
                 <StatDisplay
                   label="SPD"
                   value={stats.spd}
                   active={rollingPhase === 'spd'}
+                  color="blue"
                 />
                 <StatDisplay
                   label="Ability"
@@ -309,28 +329,29 @@ export default function GeneratePage() {
                       : 'No'
                   }
                   active={rollingPhase === 'ability-check'}
+                  color="purple"
                 />
               </div>
             </div>
 
             {/* Dice roller for current phase */}
             {rollingPhase !== 'complete' && (
-              <div className="space-y-2">
-                <h2 className="text-xl font-semibold text-center">
+              <div className="space-y-2 animate-fade-up">
+                <h2 className="font-display text-2xl font-bold text-center text-amber-800">
                   Roll for {phaseLabel(rollingPhase)}
                 </h2>
                 {rollingPhase === 'hp' && (
-                  <p className="text-center text-sm text-gray-500">
+                  <p className="text-center text-sm text-amber-600 font-medium">
                     Roll {stats.starLevel}d6, then add 6 to the total
                   </p>
                 )}
                 {rollingPhase === 'atk' && (
-                  <p className="text-center text-sm text-gray-500">
+                  <p className="text-center text-sm text-amber-600 font-medium">
                     ATK = floor((roll + Star Level) / 2)
                   </p>
                 )}
                 {rollingPhase === 'ability-check' && stats.starLevel !== null && (
-                  <p className="text-center text-sm text-gray-500">
+                  <p className="text-center text-sm text-amber-600 font-medium">
                     Need to roll {Math.abs(stats.starLevel - 6)} or less to gain an ability
                   </p>
                 )}
@@ -345,21 +366,22 @@ export default function GeneratePage() {
 
             {/* Certify button when all rolls complete */}
             {rollingPhase === 'complete' && (
-              <div className="text-center space-y-4">
-                <h2 className="text-xl font-semibold">All Stats Rolled!</h2>
+              <div className="text-center space-y-4 animate-pop">
+                <h2 className="font-display text-2xl font-bold text-green-600">All Stats Rolled!</h2>
                 {stats.abilityPassed && stats.starLevel !== null && (
-                  <p className="text-green-600 font-medium">
+                  <p className="text-green-600 font-bold text-lg">
                     Ability qualified! Magnitude: {abilityMagnitude(stats.starLevel)}
                   </p>
                 )}
                 {stats.abilityPassed === false && (
-                  <p className="text-gray-500">No ability this time.</p>
+                  <p className="text-gray-500 font-medium">No ability this time.</p>
                 )}
                 <button
                   onClick={handleCertify}
-                  className="px-8 py-4 bg-green-500 text-white text-lg font-bold rounded-xl
-                             hover:bg-green-600 transition-colors shadow-lg hover:shadow-xl
-                             active:transform active:scale-95"
+                  className="px-10 py-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-lg
+                             font-display font-bold rounded-2xl shadow-lg shadow-green-200
+                             hover:shadow-xl hover:shadow-green-300 hover:scale-105
+                             transition-all duration-200 active:scale-95"
                 >
                   Certify This Critter!
                 </button>
@@ -370,28 +392,28 @@ export default function GeneratePage() {
 
         {/* Step: Certifying */}
         {step === 'certifying' && (
-          <div className="text-center space-y-6">
-            <h2 className="text-xl font-semibold">Certifying Your Critter...</h2>
+          <div className="text-center space-y-6 animate-fade-up">
+            <h2 className="font-display text-2xl font-bold text-green-600">Certifying Your Critter...</h2>
             <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent" />
+              <div className="animate-spin rounded-full h-14 w-14 border-4 border-green-400 border-t-transparent" />
             </div>
             {stats.abilityPassed && (
-              <p className="text-gray-500">Generating a unique ability for your critter...</p>
+              <p className="text-gray-500 font-medium">Generating a unique ability for your critter...</p>
             )}
             {!stats.abilityPassed && (
-              <p className="text-gray-500">Saving your critter to the registry...</p>
+              <p className="text-gray-500 font-medium">Saving your critter to the registry...</p>
             )}
           </div>
         )}
 
         {/* Step: Done */}
         {step === 'done' && critter && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-pop">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-green-600 mb-2">
+              <h2 className="font-display text-3xl font-bold text-green-500 mb-2">
                 Critter Certified!
               </h2>
-              <p className="text-gray-500">
+              <p className="text-gray-500 font-medium">
                 Your critter has been registered. Print the certificate below!
               </p>
             </div>
@@ -416,10 +438,11 @@ export default function GeneratePage() {
                   setQrDataUrl('')
                   setError(null)
                 }}
-                className="px-6 py-3 bg-amber-500 text-white font-bold rounded-lg
-                           hover:bg-amber-600 transition-colors"
+                className="px-8 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white
+                           font-display font-bold rounded-2xl shadow-lg shadow-orange-200
+                           hover:shadow-xl hover:scale-105 transition-all duration-200"
               >
-                Generate Another Critter
+                Register Another Critter
               </button>
             </div>
           </div>
@@ -434,25 +457,37 @@ function StatDisplay({
   label,
   value,
   active,
+  color,
 }: {
   label: string
   value: number | string | null
   active: boolean
+  color: string
 }) {
+  const colorMap: Record<string, { activeBg: string, activeBorder: string, activeText: string, doneBg: string, doneBorder: string, doneText: string }> = {
+    amber: { activeBg: 'bg-amber-50', activeBorder: 'border-amber-400', activeText: 'text-amber-600', doneBg: 'bg-amber-50', doneBorder: 'border-amber-200', doneText: 'text-amber-600' },
+    red: { activeBg: 'bg-red-50', activeBorder: 'border-red-400', activeText: 'text-red-500', doneBg: 'bg-red-50', doneBorder: 'border-red-200', doneText: 'text-red-600' },
+    orange: { activeBg: 'bg-orange-50', activeBorder: 'border-orange-400', activeText: 'text-orange-500', doneBg: 'bg-orange-50', doneBorder: 'border-orange-200', doneText: 'text-orange-600' },
+    blue: { activeBg: 'bg-sky-50', activeBorder: 'border-sky-400', activeText: 'text-sky-500', doneBg: 'bg-sky-50', doneBorder: 'border-sky-200', doneText: 'text-sky-600' },
+    purple: { activeBg: 'bg-purple-50', activeBorder: 'border-purple-400', activeText: 'text-purple-500', doneBg: 'bg-purple-50', doneBorder: 'border-purple-200', doneText: 'text-purple-600' },
+  }
+
+  const c = colorMap[color] ?? colorMap.amber
+
   return (
     <div
-      className={`rounded-lg p-3 text-center transition-colors ${
+      className={`rounded-xl p-3 text-center transition-all duration-300 ${
         active
-          ? 'bg-amber-50 border-2 border-amber-400'
+          ? `${c.activeBg} border-2 ${c.activeBorder} scale-105`
           : value !== null
-          ? 'bg-green-50 border border-green-200'
+          ? `${c.doneBg} border ${c.doneBorder}`
           : 'bg-gray-50 border border-gray-200'
       }`}
     >
-      <div className="text-xs font-medium uppercase tracking-wide text-gray-400">
+      <div className="text-xs font-bold uppercase tracking-wide text-gray-400">
         {label}
       </div>
-      <div className={`text-lg font-bold ${active ? 'text-amber-600' : value !== null ? 'text-green-600' : 'text-gray-300'}`}>
+      <div className={`font-display text-xl font-bold ${active ? c.activeText : value !== null ? c.doneText : 'text-gray-300'}`}>
         {value !== null ? value : '--'}
       </div>
     </div>

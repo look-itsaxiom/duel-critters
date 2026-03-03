@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fredoka, Nunito } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
 });
 
@@ -27,33 +27,33 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fredoka.variable} ${nunito.variable} antialiased`}
       >
-        <nav className="print:hidden sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
-          <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+        <nav className="print:hidden sticky top-0 z-50 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-amber-400 shadow-lg">
+          <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
             <Link
               href="/"
-              className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50"
+              className="font-display text-2xl font-bold tracking-tight text-white drop-shadow-sm"
             >
               Duel Critters
             </Link>
 
-            <div className="flex items-center gap-6 text-sm font-medium">
+            <div className="flex items-center gap-2 text-sm font-semibold">
               <Link
                 href="/generate"
-                className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                className="rounded-full px-4 py-1.5 text-white/90 transition-all hover:bg-white/20 hover:text-white"
               >
                 Register a Critter
               </Link>
               <Link
                 href="/maps"
-                className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                className="rounded-full px-4 py-1.5 text-white/90 transition-all hover:bg-white/20 hover:text-white"
               >
                 Build a Map
               </Link>
               <Link
                 href="/rules"
-                className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                className="rounded-full px-4 py-1.5 text-white/90 transition-all hover:bg-white/20 hover:text-white"
               >
                 Rules
               </Link>

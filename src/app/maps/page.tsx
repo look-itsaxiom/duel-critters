@@ -33,24 +33,28 @@ export default function MapsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-blue-50 to-cyan-50 bg-dots py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">Map Builder</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="font-display text-4xl font-bold mb-2 text-sky-800 animate-fade-up">
+          Map Builder
+        </h1>
+        <p className="text-sky-600/70 font-medium mb-6 animate-fade-up" style={{ animationDelay: '100ms' }}>
           Design your battlefield! Click squares to toggle obstacles.
           Blue and red bases are fixed at the top and bottom.
         </p>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-2xl border-2 border-red-200 font-medium animate-pop">
             {error}
           </div>
         )}
 
-        <MapEditor onSave={handleSave} />
+        <div className="animate-fade-up" style={{ animationDelay: '200ms' }}>
+          <MapEditor onSave={handleSave} />
+        </div>
 
         {saving && (
-          <div className="mt-4 text-center text-gray-500">
+          <div className="mt-4 text-center text-sky-500 font-medium">
             Saving map...
           </div>
         )}

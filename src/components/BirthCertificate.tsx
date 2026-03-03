@@ -11,9 +11,8 @@ function starString(level: number): string {
 }
 
 function damageFormula(atk: number): string {
-  if (atk <= 0) return '0'
-  if (atk === 1) return '1d3'
-  return `${atk}d3`
+  if (atk <= 0) return '1d6'
+  return `1d6+${atk}`
 }
 
 export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificateProps) {
@@ -24,13 +23,13 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
   })
 
   return (
-    <div className="border-4 border-double border-amber-700 rounded-lg p-6 bg-amber-50 max-w-lg mx-auto">
+    <div className="border-4 border-double border-amber-700 rounded-2xl p-6 bg-amber-50 max-w-lg mx-auto">
       {/* Title */}
       <div className="text-center mb-4">
-        <h1 className="text-2xl font-bold tracking-wide text-amber-900 uppercase">
+        <h1 className="font-display text-2xl font-bold tracking-wide text-amber-900 uppercase">
           Official Critter Certificate
         </h1>
-        <div className="text-amber-600 text-sm tracking-widest">
+        <div className="text-amber-600 text-sm tracking-widest font-medium">
           Duel Critters Registry
         </div>
         <div className="mt-1 border-b-2 border-amber-300" />
@@ -40,7 +39,7 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
       <p className="text-center text-gray-700 mb-3 text-sm italic">
         This certifies that
       </p>
-      <h2 className="text-center text-3xl font-extrabold text-amber-800 mb-1">
+      <h2 className="font-display text-center text-3xl font-bold text-amber-800 mb-1">
         {critter.name}
       </h2>
       <p className="text-center text-xl text-amber-500 mb-4">
