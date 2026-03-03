@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv'
 import { put } from '@vercel/blob'
-import type { CritterRecord, MapRecord } from './types'
+import type { CritterRecord } from './types'
 
 // --- Critter Storage ---
 
@@ -23,14 +23,4 @@ export async function uploadPhoto(
     contentType: 'image/jpeg',
   })
   return blob.url
-}
-
-// --- Map Storage ---
-
-export async function saveMap(map: MapRecord): Promise<void> {
-  await kv.set(`map:${map.id}`, map)
-}
-
-export async function getMap(id: string): Promise<MapRecord | null> {
-  return await kv.get<MapRecord>(`map:${id}`)
 }

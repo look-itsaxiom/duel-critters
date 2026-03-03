@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateCritterId, generateMapId } from '../ids'
+import { generateCritterId } from '../ids'
 
 describe('generateCritterId', () => {
   it('starts with DC- prefix', () => {
@@ -27,12 +27,5 @@ describe('generateCritterId', () => {
       ids.add(generateCritterId())
     }
     expect(ids.size).toBe(100)
-  })
-})
-
-describe('generateMapId', () => {
-  it('starts with MAP- prefix', () => {
-    const id = generateMapId()
-    expect(id).toMatch(/^MAP-/)
   })
 })

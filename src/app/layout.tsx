@@ -49,7 +49,7 @@ export default function RootLayout({
                 href="/maps"
                 className="rounded-full px-4 py-1.5 text-white/90 transition-all hover:bg-white/20 hover:text-white"
               >
-                Build a Map
+                Battlefields
               </Link>
               <Link
                 href="/rules"

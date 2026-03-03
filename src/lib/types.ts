@@ -41,18 +41,14 @@ export interface CreatureIdentification {
   characteristics: string[]
 }
 
-export type TerrainType = 'open' | 'obstacle' | 'base-red' | 'base-blue'
-
-export const TERRAIN_VALUES: Record<TerrainType, number> = {
-  'open': 0,
-  'obstacle': 1,
-  'base-red': 2,
-  'base-blue': 3,
+export interface MapRule {
+  name: string
+  description: string
 }
 
 export interface MapRecord {
   id: string
   name: string
   grid: number[][]
-  createdAt: string
+  rules?: MapRule[]
 }

@@ -14,5 +14,4 @@ export const CARD_HEIGHT_MM = 88.5
 
 // Critter ID prefix
 export const CRITTER_ID_PREFIX = 'DC'
-export const MAP_ID_PREFIX = 'MAP'
 export const ID_LENGTH = 6

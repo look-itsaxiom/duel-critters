@@ -1,63 +1,96 @@
-'use client'
+import Link from 'next/link'
+import { MAPS } from '@/lib/maps'
+import MapThumbnail from '@/components/MapThumbnail'
+import DownloadAllMaps from '@/components/DownloadAllMaps'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import MapEditor from '@/components/MapEditor'
+function obstacleCount(grid: number[][]): number {
+  return grid.flat().filter(c => c === 1).length
+}
+
+function hasSpecialTerrain(grid: number[][]): boolean {
+  return grid.flat().some(c => c === 4 || c === 5)
+}
 
 export default function MapsPage() {
-  const router = useRouter()
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleSave = async (name: string, grid: number[][]) => {
-    setSaving(true)
-    setError(null)
-
-    try {
-      const res = await fetch('/api/maps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, grid }),
-      })
-
-      if (!res.ok) {
-        throw new Error('Failed to save map')
-      }
-
-      const map = await res.json()
-      router.push(`/maps/${map.id}`)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
-      setSaving(false)
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-blue-50 to-cyan-50 bg-dots py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="font-display text-4xl font-bold mb-2 text-sky-800 animate-fade-up">
-          Map Builder
-        </h1>
-        <p className="text-sky-600/70 font-medium mb-6 animate-fade-up" style={{ animationDelay: '100ms' }}>
-          Design your battlefield! Click squares to toggle obstacles.
-          Blue and red bases are fixed at the top and bottom.
-        </p>
-
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-2xl border-2 border-red-200 font-medium animate-pop">
-            {error}
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-teal-50 to-cyan-50 bg-dots">
+      <div className="mx-auto max-w-3xl px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8 animate-fade-up">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-emerald-900 tracking-tight">
+            Battlefields
+          </h1>
+          <p className="mt-2 text-emerald-700/70 font-medium text-base sm:text-lg max-w-md mx-auto">
+            Pick a battlefield, print it out, and duel! Some maps have special rules that
+            change how the game plays.
+          </p>
+          <div className="mt-4">
+            <DownloadAllMaps />
           </div>
-        )}
-
-        <div className="animate-fade-up" style={{ animationDelay: '200ms' }}>
-          <MapEditor onSave={handleSave} />
         </div>
 
-        {saving && (
-          <div className="mt-4 text-center text-sky-500 font-medium">
-            Saving map...
-          </div>
-        )}
+        {/* Map gallery */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
+          {MAPS.map((map) => {
+            const obstacles = obstacleCount(map.grid)
+            const hasTerrain = hasSpecialTerrain(map.grid)
+            const hasRules = map.rules && map.rules.length > 0
+
+            return (
+              <Link
+                key={map.id}
+                href={`/maps/${map.id}`}
+                className="group block rounded-2xl bg-white border-2 border-emerald-200
+                           p-4 shadow-sm transition-all duration-200
+                           hover:scale-[1.03] hover:shadow-lg hover:border-emerald-400
+                           active:scale-[0.98]"
+              >
+                {/* Thumbnail */}
+                <div className="flex justify-center mb-3">
+                  <MapThumbnail grid={map.grid} />
+                </div>
+
+                {/* Map name */}
+                <h2 className="font-display font-bold text-lg text-gray-900 group-hover:text-emerald-700 transition-colors">
+                  {map.name}
+                </h2>
+
+                {/* Stats line */}
+                <div className="text-xs text-gray-400 font-medium mt-0.5">
+                  {obstacles === 0 ? 'No obstacles' : `${obstacles} obstacle${obstacles > 1 ? 's' : ''}`}
+                </div>
+
+                {/* Rule badges */}
+                {(hasRules || hasTerrain) && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {map.rules?.map((rule) => {
+                      // Pick badge color by rule type
+                      const isLava = rule.name.toLowerCase().includes('lava')
+                      const isWater = rule.name.toLowerCase().includes('water')
+                      const isDeath = rule.name.toLowerCase().includes('sudden')
+                      const badgeColor = isLava
+                        ? 'bg-orange-100 text-orange-700 border-orange-200'
+                        : isWater
+                        ? 'bg-cyan-100 text-cyan-700 border-cyan-200'
+                        : isDeath
+                        ? 'bg-red-100 text-red-700 border-red-200'
+                        : 'bg-violet-100 text-violet-700 border-violet-200'
+
+                      return (
+                        <span
+                          key={rule.name}
+                          className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${badgeColor}`}
+                        >
+                          {rule.name}
+                        </span>
+                      )
+                    })}
+                  </div>
+                )}
+              </Link>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

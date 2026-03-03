@@ -92,7 +92,7 @@ export default function Home() {
             href="/maps"
             className="inline-flex h-14 items-center justify-center rounded-full border-2 border-sky-300 bg-white px-10 text-base font-bold text-sky-600 shadow-sm transition-all duration-200 hover:scale-105 hover:border-sky-400 hover:bg-sky-50"
           >
-            Build a Battlefield
+            Pick a Battlefield
           </Link>
 
           <Link
