@@ -51,7 +51,7 @@ export default function DownloadAllMaps() {
       }
 
       container.style.display = 'none'
-      pdf.save('duel-critters-battlefields.pdf')
+      pdf.save('critter-arena-battlefields.pdf')
     } catch (err) {
       console.error('PDF generation failed:', err)
     } finally {
@@ -98,7 +98,7 @@ export default function DownloadAllMaps() {
                   {map.name}
                 </div>
                 <div style={{ fontSize: '12px', color: '#888', marginTop: '4px' }}>
-                  Duel Critters Battlefield
+                  Critter Arena Battlefield
                 </div>
               </div>
 

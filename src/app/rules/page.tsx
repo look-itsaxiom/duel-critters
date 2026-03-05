@@ -108,7 +108,7 @@ export default function RulesPage() {
           </div>
           <div className="mt-4">
             <h1 className="font-display text-4xl font-bold tracking-tight text-emerald-800 sm:text-5xl">
-              Duel Critters Rules
+              Critter Arena Rules
             </h1>
             <p className="mt-2 text-lg text-emerald-600/70 font-medium print:text-gray-700">
               The official rulebook -- your creatures, your battlefield, your strategy!
@@ -258,7 +258,7 @@ export default function RulesPage() {
         {/* Footer */}
         <div className="mt-10 border-t-2 border-emerald-200 pt-6 text-center print:mt-6 print:pt-4">
           <p className="text-sm text-emerald-400 font-medium print:text-gray-600">
-            Duel Critters -- Have fun, play fair, and may the best critters win!
+            Critter Arena -- Have fun, play fair, and may the best critters win!
           </p>
         </div>
       </main>

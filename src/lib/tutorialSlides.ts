@@ -54,7 +54,7 @@ export const TUTORIAL_SLIDES: TutorialSlide[] = [
           { row: 7, col: 5, team: 'red', label: '🦎' },
           { row: 9, col: 7, team: 'red', label: '🐍' },
         ],
-        caption: 'Duel Critters is a 3v3 tactics game on a grid battlefield!',
+        caption: 'Critter Arena is a 3v3 tactics game on a grid battlefield!',
       },
     ],
   },
