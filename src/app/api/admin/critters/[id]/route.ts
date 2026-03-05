@@ -1,14 +1,6 @@
 import { NextResponse } from 'next/server'
 import { validateAdmin } from '@/lib/admin-auth'
-import { updateCritter } from '@/lib/storage'
-
-interface PatchBody {
-  ability?: {
-    name: string
-    description: string
-    magnitude: number
-  }
-}
+import { updateCritter, deleteCritter } from '@/lib/storage'
 
 export async function PATCH(
   request: Request,
@@ -21,11 +13,20 @@ export async function PATCH(
 
   try {
     const { id } = await params
-    const body: PatchBody = await request.json()
+    const body = await request.json()
+
+    // Allow updating any critter field except id
+    const allowedFields = [
+      'name', 'nickname', 'creatureType', 'characteristics',
+      'starLevel', 'hp', 'atk', 'spd',
+      'hasAbility', 'ability', 'photoUrl',
+    ]
 
     const updates: Record<string, unknown> = {}
-    if (body.ability) {
-      updates.ability = body.ability
+    for (const field of allowedFields) {
+      if (field in body) {
+        updates[field] = body[field]
+      }
     }
 
     if (Object.keys(updates).length === 0) {
@@ -41,4 +42,18 @@ export async function PATCH(
   } catch {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const isAdmin = await validateAdmin()
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { id } = await params
+  await deleteCritter(id)
+  return NextResponse.json({ ok: true })
 }

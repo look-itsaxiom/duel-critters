@@ -52,6 +52,10 @@ export async function updateCritter(
   return updated
 }
 
+export async function deleteCritter(id: string): Promise<void> {
+  await kv.del(`critter:${id}`)
+}
+
 // --- Shop Item Storage ---
 
 export async function saveShopItem(item: ShopItem): Promise<void> {

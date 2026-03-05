@@ -7,10 +7,19 @@ function starString(level: number): string {
   return '\u2605'.repeat(level)
 }
 
-interface EditingAbility {
+interface EditingCritter {
   name: string
-  description: string
-  magnitude: number
+  nickname: string
+  creatureType: string
+  characteristics: string
+  starLevel: number
+  hp: number
+  atk: number
+  spd: number
+  hasAbility: boolean
+  abilityName: string
+  abilityDescription: string
+  abilityMagnitude: number
 }
 
 type Tab = 'critters' | 'shop' | 'promptlab'
@@ -51,7 +60,7 @@ export default function AdminPage() {
   const [critters, setCritters] = useState<CritterRecord[]>([])
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [editAbility, setEditAbility] = useState<EditingAbility>({ name: '', description: '', magnitude: 1 })
+  const [editForm, setEditForm] = useState<EditingCritter | null>(null)
   const [saving, setSaving] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
 
@@ -187,30 +196,74 @@ export default function AdminPage() {
 
   function startEdit(critter: CritterRecord) {
     setEditingId(critter.id)
-    setEditAbility(
-      critter.ability
-        ? { name: critter.ability.name, description: critter.ability.description, magnitude: critter.ability.magnitude }
-        : { name: '', description: '', magnitude: 1 }
-    )
+    setEditForm({
+      name: critter.name,
+      nickname: critter.nickname || '',
+      creatureType: critter.creatureType,
+      characteristics: critter.characteristics.join(', '),
+      starLevel: critter.starLevel,
+      hp: critter.hp,
+      atk: critter.atk,
+      spd: critter.spd,
+      hasAbility: critter.hasAbility,
+      abilityName: critter.ability?.name || '',
+      abilityDescription: critter.ability?.description || '',
+      abilityMagnitude: critter.ability?.magnitude || 1,
+    })
   }
 
-  async function saveAbility(id: string) {
+  async function saveCritter(id: string) {
+    if (!editForm) return
     setSaving(true)
     try {
+      const body: Record<string, unknown> = {
+        name: editForm.name,
+        nickname: editForm.nickname || undefined,
+        creatureType: editForm.creatureType,
+        characteristics: editForm.characteristics.split(',').map((s) => s.trim()).filter(Boolean),
+        starLevel: editForm.starLevel,
+        hp: editForm.hp,
+        atk: editForm.atk,
+        spd: editForm.spd,
+        hasAbility: editForm.hasAbility,
+      }
+      if (editForm.hasAbility && editForm.abilityName) {
+        body.ability = {
+          name: editForm.abilityName,
+          description: editForm.abilityDescription,
+          magnitude: editForm.abilityMagnitude,
+        }
+      } else {
+        body.ability = null
+        body.hasAbility = false
+      }
       const res = await fetch(`/api/admin/critters/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ability: editAbility }),
+        body: JSON.stringify(body),
       })
       if (res.ok) {
         const updated = await res.json()
         setCritters((prev) => prev.map((c) => (c.id === id ? updated : c)))
         setEditingId(null)
+        setEditForm(null)
       }
     } catch {
       // ignore
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleDeleteCritter(id: string, name: string) {
+    if (!confirm(`Delete "${name}" permanently? This cannot be undone.`)) return
+    try {
+      const res = await fetch(`/api/admin/critters/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setCritters((prev) => prev.filter((c) => c.id !== id))
+      }
+    } catch {
+      // ignore
     }
   }
 
@@ -422,111 +475,165 @@ export default function AdminPage() {
             <div className="space-y-4">
           {critters.map((critter) => (
             <div key={critter.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-              <div className="flex items-start gap-4">
-                {/* Photo */}
-                {critter.photoUrl && (
-                  <img
-                    src={critter.photoUrl}
-                    alt={critter.name}
-                    className="w-16 h-16 rounded-lg object-cover border border-gray-200 flex-shrink-0"
-                  />
-                )}
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-display font-bold text-lg text-gray-900">{critter.name}</span>
-                    {critter.nickname && (
-                      <span className="text-sm text-gray-500 italic">&ldquo;{critter.nickname}&rdquo;</span>
-                    )}
-                    <span className="text-amber-500">{starString(critter.starLevel)}</span>
+              {editingId === critter.id && editForm ? (
+                /* Full edit form */
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-400 font-mono">{critter.id}</span>
+                    <button
+                      onClick={() => { setEditingId(null); setEditForm(null) }}
+                      className="text-xs text-gray-500 hover:text-gray-700"
+                    >
+                      Cancel
+                    </button>
                   </div>
 
-                  <div className="flex gap-4 mt-1 text-sm">
-                    <span><span className="font-bold text-red-600">HP</span> {critter.hp}</span>
-                    <span><span className="font-bold text-orange-600">ATK</span> {critter.atk}</span>
-                    <span><span className="font-bold text-blue-600">SPD</span> {critter.spd}</span>
-                    <span className="text-gray-400">{critter.creatureType}</span>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Name</label>
+                      <input type="text" value={editForm.name}
+                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-violet-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Nickname</label>
+                      <input type="text" value={editForm.nickname}
+                        onChange={(e) => setEditForm({ ...editForm, nickname: e.target.value })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-violet-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Creature Type</label>
+                      <input type="text" value={editForm.creatureType}
+                        onChange={(e) => setEditForm({ ...editForm, creatureType: e.target.value })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-violet-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Characteristics (comma-separated)</label>
+                      <input type="text" value={editForm.characteristics}
+                        onChange={(e) => setEditForm({ ...editForm, characteristics: e.target.value })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-violet-400" />
+                    </div>
                   </div>
 
-                  {/* Ability display / edit */}
-                  {editingId === critter.id ? (
-                    <div className="mt-3 bg-purple-50 rounded-lg p-3 space-y-2">
-                      <input
-                        type="text"
-                        value={editAbility.name}
-                        onChange={(e) => setEditAbility((a) => ({ ...a, name: e.target.value }))}
-                        placeholder="Ability name"
-                        className="w-full px-3 py-1.5 border border-purple-200 rounded text-sm focus:outline-none focus:border-purple-400"
-                      />
-                      <textarea
-                        value={editAbility.description}
-                        onChange={(e) => setEditAbility((a) => ({ ...a, description: e.target.value }))}
-                        placeholder="Ability description"
-                        rows={2}
-                        className="w-full px-3 py-1.5 border border-purple-200 rounded text-sm focus:outline-none focus:border-purple-400"
-                      />
-                      <div className="flex items-center gap-2">
-                        <label className="text-xs text-gray-500">Magnitude:</label>
-                        <input
-                          type="number"
-                          min={1}
-                          max={5}
-                          value={editAbility.magnitude}
-                          onChange={(e) => setEditAbility((a) => ({ ...a, magnitude: Number(e.target.value) }))}
-                          className="w-16 px-2 py-1 border border-purple-200 rounded text-sm"
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => saveAbility(critter.id)}
-                          disabled={saving}
-                          className="px-3 py-1 bg-purple-600 text-white text-sm font-bold rounded hover:bg-purple-700 disabled:opacity-50"
-                        >
-                          {saving ? 'Saving...' : 'Save'}
-                        </button>
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
-                        >
-                          Cancel
-                        </button>
-                      </div>
+                  <div className="grid grid-cols-4 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-red-500 mb-1">HP</label>
+                      <input type="number" min={1} value={editForm.hp}
+                        onChange={(e) => setEditForm({ ...editForm, hp: Number(e.target.value) })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400" />
                     </div>
-                  ) : critter.hasAbility && critter.ability ? (
-                    <div className="mt-2 text-sm">
-                      <span className="font-bold text-purple-700">{critter.ability.name}</span>
-                      <span className="text-purple-500 ml-1">(mag {critter.ability.magnitude})</span>
-                      <span className="text-gray-600 ml-2">{critter.ability.description}</span>
+                    <div>
+                      <label className="block text-xs font-semibold text-orange-500 mb-1">ATK</label>
+                      <input type="number" min={1} value={editForm.atk}
+                        onChange={(e) => setEditForm({ ...editForm, atk: Number(e.target.value) })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-orange-400" />
                     </div>
-                  ) : (
-                    <div className="mt-2 text-sm text-gray-400 italic">No ability</div>
-                  )}
+                    <div>
+                      <label className="block text-xs font-semibold text-blue-500 mb-1">SPD</label>
+                      <input type="number" min={1} max={3} value={editForm.spd}
+                        onChange={(e) => setEditForm({ ...editForm, spd: Number(e.target.value) })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-amber-500 mb-1">Star Level</label>
+                      <input type="number" min={1} max={6} value={editForm.starLevel}
+                        onChange={(e) => setEditForm({ ...editForm, starLevel: Number(e.target.value) })}
+                        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-amber-400" />
+                    </div>
+                  </div>
 
-                  {critter.updatedAt && critter.updatedAt !== critter.createdAt && (
-                    <div className="mt-1 text-xs text-amber-600 font-medium">
-                      Edited {new Date(critter.updatedAt).toLocaleDateString()}
-                    </div>
-                  )}
-                </div>
+                  {/* Ability section */}
+                  <div className="bg-purple-50 rounded-lg p-3 space-y-2">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input type="checkbox" checked={editForm.hasAbility}
+                        onChange={(e) => setEditForm({ ...editForm, hasAbility: e.target.checked })}
+                        className="rounded border-purple-300" />
+                      <span className="font-bold text-purple-700">Has Ability</span>
+                    </label>
+                    {editForm.hasAbility && (
+                      <>
+                        <div className="grid grid-cols-[1fr_auto] gap-2">
+                          <input type="text" value={editForm.abilityName} placeholder="Ability name"
+                            onChange={(e) => setEditForm({ ...editForm, abilityName: e.target.value })}
+                            className="w-full px-3 py-1.5 border border-purple-200 rounded text-sm focus:outline-none focus:border-purple-400" />
+                          <div className="flex items-center gap-1">
+                            <label className="text-xs text-gray-500">Mag:</label>
+                            <input type="number" min={1} max={5} value={editForm.abilityMagnitude}
+                              onChange={(e) => setEditForm({ ...editForm, abilityMagnitude: Number(e.target.value) })}
+                              className="w-14 px-2 py-1.5 border border-purple-200 rounded text-sm" />
+                          </div>
+                        </div>
+                        <textarea value={editForm.abilityDescription} placeholder="Ability description" rows={2}
+                          onChange={(e) => setEditForm({ ...editForm, abilityDescription: e.target.value })}
+                          className="w-full px-3 py-1.5 border border-purple-200 rounded text-sm focus:outline-none focus:border-purple-400" />
+                      </>
+                    )}
+                  </div>
 
-                {/* Actions */}
-                <div className="flex flex-col gap-1 flex-shrink-0">
-                  <button
-                    onClick={() => copyOwnerLink(critter.id)}
-                    className="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-lg hover:bg-green-200 transition-colors"
-                  >
-                    {copied === critter.id ? 'Copied!' : 'Owner Link'}
-                  </button>
-                  <button
-                    onClick={() => startEdit(critter)}
-                    className="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-lg hover:bg-purple-200 transition-colors"
-                  >
-                    Edit Ability
-                  </button>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveCritter(critter.id)} disabled={saving}
+                      className="px-4 py-1.5 bg-violet-600 text-white text-sm font-bold rounded-lg hover:bg-violet-700 disabled:opacity-50">
+                      {saving ? 'Saving...' : 'Save All Changes'}
+                    </button>
+                    <button onClick={() => { setEditingId(null); setEditForm(null) }}
+                      className="px-4 py-1.5 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Read-only display */
+                <div className="flex items-start gap-4">
+                  {critter.photoUrl && (
+                    <img src={critter.photoUrl} alt={critter.name}
+                      className="w-16 h-16 rounded-lg object-cover border border-gray-200 flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-display font-bold text-lg text-gray-900">{critter.name}</span>
+                      {critter.nickname && (
+                        <span className="text-sm text-gray-500 italic">&ldquo;{critter.nickname}&rdquo;</span>
+                      )}
+                      <span className="text-amber-500">{starString(critter.starLevel)}</span>
+                      <span className="text-xs text-gray-400 font-mono">{critter.id}</span>
+                    </div>
+                    <div className="flex gap-4 mt-1 text-sm">
+                      <span><span className="font-bold text-red-600">HP</span> {critter.hp}</span>
+                      <span><span className="font-bold text-orange-600">ATK</span> {critter.atk}</span>
+                      <span><span className="font-bold text-blue-600">SPD</span> {critter.spd}</span>
+                      <span className="text-gray-400">{critter.creatureType}</span>
+                    </div>
+                    {critter.hasAbility && critter.ability ? (
+                      <div className="mt-2 text-sm">
+                        <span className="font-bold text-purple-700">{critter.ability.name}</span>
+                        <span className="text-purple-500 ml-1">(mag {critter.ability.magnitude})</span>
+                        <span className="text-gray-600 ml-2">{critter.ability.description}</span>
+                      </div>
+                    ) : (
+                      <div className="mt-2 text-sm text-gray-400 italic">No ability</div>
+                    )}
+                    {critter.updatedAt && critter.updatedAt !== critter.createdAt && (
+                      <div className="mt-1 text-xs text-amber-600 font-medium">
+                        Edited {new Date(critter.updatedAt).toLocaleDateString()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1 flex-shrink-0">
+                    <button onClick={() => copyOwnerLink(critter.id)}
+                      className="px-3 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-lg hover:bg-green-200 transition-colors">
+                      {copied === critter.id ? 'Copied!' : 'Owner Link'}
+                    </button>
+                    <button onClick={() => startEdit(critter)}
+                      className="px-3 py-1.5 bg-violet-100 text-violet-700 text-xs font-bold rounded-lg hover:bg-violet-200 transition-colors">
+                      Edit
+                    </button>
+                    <button onClick={() => handleDeleteCritter(critter.id, critter.name)}
+                      className="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
             </div>
