@@ -14,7 +14,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Duel Critters",
+  title: "Critter Arena",
   description:
     "Turn your resin critter figurine into a battle-ready card. Upload a photo, roll stats with 3D dice, print a certificate, and duel your friends!",
 };
@@ -35,7 +35,7 @@ export default function RootLayout({
               href="/"
               className="font-display text-2xl font-bold tracking-tight text-white drop-shadow-sm"
             >
-              Duel Critters
+              Critter Arena
             </Link>
 
             <div className="flex items-center gap-2 text-sm font-semibold">
@@ -50,6 +50,12 @@ export default function RootLayout({
                 className="rounded-full px-4 py-1.5 text-white/90 transition-all hover:bg-white/20 hover:text-white"
               >
                 Battlefields
+              </Link>
+              <Link
+                href="/shop"
+                className="rounded-full px-4 py-1.5 text-white/90 transition-all hover:bg-white/20 hover:text-white"
+              >
+                Shop
               </Link>
               <Link
                 href="/rules"

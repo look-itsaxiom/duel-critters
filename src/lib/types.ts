@@ -19,6 +19,7 @@ export interface CritterRecord {
   ability: Ability | null
   photoUrl: string
   createdAt: string
+  updatedAt?: string
 }
 
 export interface DiceResult {
@@ -39,6 +40,18 @@ export interface CreatureIdentification {
   name: string
   creatureType: string
   characteristics: string[]
+}
+
+export interface ShopItem {
+  id: string
+  name: string
+  description: string
+  imageUrl: string
+  affiliateUrl: string
+  source: 'amazon' | 'etsy'
+  price?: string
+  featured: boolean
+  createdAt: string
 }
 
 export interface MapRule {

@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { listShopItems } from "@/lib/storage";
+
+export const dynamic = 'force-dynamic'
 
 const steps = [
   {
@@ -35,7 +38,9 @@ const steps = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const shopItems = await listShopItems()
+  const featured = shopItems.filter((i) => i.featured).slice(0, 3)
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-fuchsia-50 via-amber-50 to-sky-50 bg-dots">
       <main className="mx-auto flex w-full max-w-2xl flex-col items-center gap-14 px-4 py-20 text-center">
@@ -101,6 +106,42 @@ export default function Home() {
           >
             Learn the Rules
           </Link>
+        </div>
+
+        {/* Need a critter? teaser */}
+        <div className="w-full max-w-lg animate-fade-up" style={{ animationDelay: "500ms" }}>
+          <div className="rounded-2xl border-2 border-rose-200 bg-rose-50/80 p-6 text-center">
+            <span className="text-3xl mb-2 block">🧸</span>
+            <h2 className="font-display text-2xl font-bold text-rose-700 mb-2">
+              Need a critter?
+            </h2>
+            <p className="text-sm text-rose-600/70 mb-4">
+              Don&apos;t have a figurine yet? Browse our curated picks from Amazon and Etsy.
+            </p>
+
+            {featured.length > 0 && (
+              <div className="flex justify-center gap-3 mb-4">
+                {featured.map((item) => (
+                  <div key={item.id} className="w-16 h-16 rounded-xl bg-white border border-rose-200 overflow-hidden shadow-sm">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="w-full h-full object-contain p-1"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Link
+              href="/shop"
+              className="inline-flex h-12 items-center justify-center rounded-full
+                         bg-gradient-to-r from-rose-400 to-pink-500 px-8 text-base font-bold text-white
+                         shadow-lg shadow-rose-200 transition-all duration-200 hover:scale-105 hover:shadow-xl"
+            >
+              Browse Critters
+            </Link>
+          </div>
         </div>
       </main>
     </div>

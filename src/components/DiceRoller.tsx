@@ -125,7 +125,7 @@ export default function DiceRoller({ notation, label, onResult, disabled }: Dice
         <div
           ref={containerRef}
           id="dice-canvas"
-          className="relative z-10 w-[90vw] h-[60vh] max-w-2xl rounded-2xl overflow-hidden"
+          className="relative z-10 w-screen h-[70vh] overflow-hidden"
         />
 
         {/* Result splash */}

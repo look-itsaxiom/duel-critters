@@ -11,12 +11,12 @@ interface CertificatePageProps {
 
 export default function CertificatePage({ critter, qrDataUrl }: CertificatePageProps) {
   return (
-    <div className="certificate-print-page max-w-xl mx-auto py-8 px-4 print:py-2">
+    <div className="certificate-print-page max-w-xl mx-auto py-8 px-4 print:py-0 print:px-0">
       {/* Birth Certificate (top portion) */}
       <BirthCertificate critter={critter} qrDataUrl={qrDataUrl} />
 
       {/* Cut line */}
-      <div className="my-6 flex items-center gap-2 print:my-2">
+      <div className="my-6 flex items-center gap-2 print:my-1">
         <div className="flex-1 border-t-2 border-dashed border-gray-400" />
         <span className="text-sm text-gray-400 whitespace-nowrap select-none">
           &#9986; CUT HERE

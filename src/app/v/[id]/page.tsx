@@ -16,9 +16,31 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
   }
 
   const stars = '\u2605'.repeat(critter.starLevel) + '\u2606'.repeat(6 - critter.starLevel)
+  const isOutdated = critter.updatedAt && critter.updatedAt !== critter.createdAt
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-emerald-50 to-teal-50 bg-dots py-8 px-4 print:bg-white print:py-0">
+      {/* Outdated card warning */}
+      {isOutdated && (
+        <div className="max-w-md mx-auto mb-4 bg-orange-100 border-2 border-orange-400 rounded-2xl p-4 print:hidden">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-2xl">&#9888;</span>
+            <span className="font-display font-bold text-orange-800 text-lg">Card Outdated</span>
+          </div>
+          <p className="text-orange-700 text-sm">
+            This critter&apos;s stats have been updated since your card was printed.
+            The information below is current &mdash; please reprint your certificate.
+          </p>
+          <a
+            href="#reprint"
+            className="inline-block mt-3 px-5 py-2 bg-orange-500 text-white font-bold rounded-xl
+                       hover:bg-orange-600 transition-colors text-sm"
+          >
+            Reprint Certificate
+          </a>
+        </div>
+      )}
+
       {/* Verify card — hidden when printing */}
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg border-2 border-green-200 p-6 animate-pop print:hidden">
         <div className="text-center mb-4">
@@ -70,7 +92,7 @@ export default async function VerifyPage({ params }: VerifyPageProps) {
       </div>
 
       {/* Reprint section — outside the card so certificate has full width */}
-      <div className="mt-6 max-w-xl mx-auto print:mt-0">
+      <div id="reprint" className="mt-6 max-w-xl mx-auto print:mt-0">
         <ReprintSection critter={critter} />
       </div>
     </div>
