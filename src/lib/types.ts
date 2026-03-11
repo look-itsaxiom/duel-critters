@@ -48,7 +48,7 @@ export interface ShopItem {
   description: string
   imageUrl: string
   affiliateUrl: string
-  source: 'amazon' | 'etsy'
+  source: 'amazon'
   price?: string
   featured: boolean
   createdAt: string

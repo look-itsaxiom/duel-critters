@@ -20,7 +20,7 @@ export default async function ShopPage() {
           </h1>
           <p className="mt-3 max-w-md mx-auto text-lg text-gray-500">
             Don&apos;t have a figurine yet? We picked out some of our favorites
-            from Amazon and Etsy.
+            from Amazon.
           </p>
         </div>
 
@@ -30,8 +30,9 @@ export default async function ShopPage() {
         {/* FTC Disclosure */}
         <div className="mt-16 text-center">
           <p className="text-xs text-gray-400 max-w-md mx-auto leading-relaxed">
-            As an Amazon Associate and Etsy affiliate, we earn from qualifying
-            purchases. Prices shown are approximate and may vary.
+            As an Amazon Associate, we earn from qualifying purchases to keep
+            the lights on in the Critter Arena. Prices shown are approximate
+            and may vary.
           </p>
         </div>
       </main>

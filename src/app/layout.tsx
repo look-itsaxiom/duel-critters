@@ -15,9 +15,25 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Critter Arena",
+  title: {
+    default: "Critter Arena",
+    template: "%s | Critter Arena",
+  },
   description:
     "Turn your resin critter figurine into a battle-ready card. Upload a photo, roll stats with 3D dice, print a certificate, and duel your friends!",
+  keywords: ["critter arena", "tabletop game", "kids game", "figurine battle", "resin critters", "dice game"],
+  authors: [{ name: "Critter Arena" }],
+  openGraph: {
+    title: "Critter Arena",
+    description: "Turn your critter figurine into a battle-ready card with AI-powered stats and abilities!",
+    type: "website",
+    siteName: "Critter Arena",
+  },
+  twitter: {
+    card: "summary",
+    title: "Critter Arena",
+    description: "Turn your critter figurine into a battle-ready card with AI-powered stats and abilities!",
+  },
 };
 
 export default function RootLayout({

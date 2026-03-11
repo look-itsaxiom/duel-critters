@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Shield background -->
+  <path d="M256 28 L460 120 L460 280 Q460 420 256 492 Q52 420 52 280 L52 120 Z" fill="#7c3aed" />
+  <path d="M256 52 L440 136 L440 278 Q440 404 256 470 Q72 404 72 278 L72 136 Z" fill="#a78bfa" />
+  <!-- Paw print -->
+  <ellipse cx="256" cy="310" rx="52" ry="58" fill="#fbbf24" />
+  <!-- Toes -->
+  <circle cx="196" cy="230" r="28" fill="#fbbf24" />
+  <circle cx="256" cy="210" r="28" fill="#fbbf24" />
+  <circle cx="316" cy="230" r="28" fill="#fbbf24" />
+  <!-- Star -->
+  <polygon points="256,120 268,158 308,158 276,180 286,218 256,196 226,218 236,180 204,158 244,158" fill="#fbbf24" />
+</svg>

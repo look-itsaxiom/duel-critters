@@ -8,45 +8,17 @@ const SOURCE_COLORS = {
     pill: 'bg-orange-100 text-orange-700 border-orange-200',
     label: 'Amazon',
   },
-  etsy: {
-    pill: 'bg-amber-100 text-amber-700 border-amber-200',
-    label: 'Etsy',
-  },
 } as const
 
-type Filter = 'all' | 'amazon' | 'etsy'
+type Filter = 'all' | 'amazon'
 
 export default function ShopGrid({ items }: { items: ShopItem[] }) {
   const [filter, setFilter] = useState<Filter>('all')
 
   const filtered = filter === 'all' ? items : items.filter((i) => i.source === filter)
 
-  const amazonCount = items.filter((i) => i.source === 'amazon').length
-  const etsyCount = items.filter((i) => i.source === 'etsy').length
-
   return (
     <>
-      {/* Filter pills */}
-      <div className="flex justify-center gap-2 mb-10">
-        {([
-          ['all', `All (${items.length})`],
-          ['amazon', `Amazon (${amazonCount})`],
-          ['etsy', `Etsy (${etsyCount})`],
-        ] as [Filter, string][]).map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => setFilter(key)}
-            className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-200 border-2
-              ${filter === key
-                ? 'bg-rose-500 text-white border-rose-500 shadow-md shadow-rose-200'
-                : 'bg-white text-gray-600 border-gray-200 hover:border-rose-300 hover:text-rose-600'
-              }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
       {/* Product grid */}
       {filtered.length === 0 ? (
         <div className="text-center py-16">
@@ -98,8 +70,8 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
                 {/* Source badge + price */}
                 <div className="flex items-center justify-between mb-2">
                   <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5
-                                    rounded-full border ${SOURCE_COLORS[item.source].pill}`}>
-                    {SOURCE_COLORS[item.source].label}
+                                    rounded-full border ${SOURCE_COLORS[item.source as keyof typeof SOURCE_COLORS]?.pill ?? 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+                    {SOURCE_COLORS[item.source as keyof typeof SOURCE_COLORS]?.label ?? item.source}
                   </span>
                   {item.price && (
                     <span className="text-sm font-bold text-gray-700">{item.price}</span>

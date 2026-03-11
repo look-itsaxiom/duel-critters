@@ -22,7 +22,15 @@ interface EditingCritter {
   abilityMagnitude: number
 }
 
-type Tab = 'critters' | 'shop' | 'promptlab'
+type Tab = 'critters' | 'shop' | 'promptlab' | 'messages'
+
+interface ContactMessage {
+  id: string
+  name: string
+  message: string
+  createdAt: string
+  read: boolean
+}
 
 interface AbilityResult {
   ability: { name: string; description: string; magnitude: number } | null
@@ -37,7 +45,7 @@ const EMPTY_SHOP_FORM: {
   description: string
   imageUrl: string
   affiliateUrl: string
-  source: 'amazon' | 'etsy'
+  source: 'amazon'
   price: string
   featured: boolean
 } = {
@@ -72,6 +80,10 @@ export default function AdminPage() {
   const [editingShopId, setEditingShopId] = useState<string | null>(null)
   const [shopSaving, setShopSaving] = useState(false)
 
+  // Messages state
+  const [messages, setMessages] = useState<ContactMessage[]>([])
+  const [messagesLoading, setMessagesLoading] = useState(false)
+
   // Prompt Lab state
   const [promptText, setPromptText] = useState('')
   const [promptLoading, setPromptLoading] = useState(false)
@@ -81,6 +93,52 @@ export default function AdminPage() {
   const [labMag, setLabMag] = useState(3)
   const [labGenerating, setLabGenerating] = useState(false)
   const [labHistory, setLabHistory] = useState<AbilityResult[]>([])
+
+  const fetchMessages = useCallback(async () => {
+    setMessagesLoading(true)
+    try {
+      const res = await fetch('/api/admin/messages')
+      if (res.status === 401) { setAuthed(false); return }
+      const data = await res.json()
+      setMessages(data)
+    } catch {
+      // ignore
+    } finally {
+      setMessagesLoading(false)
+    }
+  }, [])
+
+  async function toggleMessageRead(id: string, read: boolean) {
+    try {
+      const res = await fetch('/api/admin/messages', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, read }),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        setMessages((prev) => prev.map((m) => (m.id === id ? updated : m)))
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  async function deleteMessage(id: string) {
+    if (!confirm('Delete this message?')) return
+    try {
+      const res = await fetch('/api/admin/messages', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+      if (res.ok) {
+        setMessages((prev) => prev.filter((m) => m.id !== id))
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   const fetchDefaultPrompt = useCallback(async () => {
     setPromptLoading(true)
@@ -171,9 +229,10 @@ export default function AdminPage() {
     if (authed) {
       fetchCritters()
       fetchShopItems()
+      fetchMessages()
       fetchDefaultPrompt()
     }
-  }, [authed, fetchCritters, fetchShopItems, fetchDefaultPrompt])
+  }, [authed, fetchCritters, fetchShopItems, fetchMessages, fetchDefaultPrompt])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -390,13 +449,9 @@ export default function AdminPage() {
         />
       </div>
       <div className="flex items-center gap-4">
-        <select
-          value={shopForm.source} onChange={(e) => setShopForm((f) => ({ ...f, source: e.target.value as 'amazon' | 'etsy' }))}
-          className="px-3 py-2 border border-rose-200 rounded-lg text-sm"
-        >
-          <option value="amazon">Amazon</option>
-          <option value="etsy">Etsy</option>
-        </select>
+        <span className="px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg text-sm font-bold text-orange-700">
+          Amazon
+        </span>
         <input
           type="text" placeholder="Price (e.g. $8.99)"
           value={shopForm.price} onChange={(e) => setShopForm((f) => ({ ...f, price: e.target.value }))}
@@ -455,6 +510,18 @@ export default function AdminPage() {
             }`}
           >
             Shop ({shopItems.length})
+          </button>
+          <button
+            onClick={() => setTab('messages')}
+            className={`px-5 py-2.5 text-sm font-bold rounded-t-lg transition-colors ${
+              tab === 'messages'
+                ? 'bg-white border-2 border-b-0 border-gray-200 text-teal-600'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Messages ({messages.filter(m => !m.read).length > 0
+              ? <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs bg-teal-500 text-white rounded-full">{messages.filter(m => !m.read).length}</span>
+              : messages.length})
           </button>
           <button
             onClick={() => setTab('promptlab')}
@@ -712,6 +779,63 @@ export default function AdminPage() {
               {shopItems.length === 0 && !shopLoading && (
                 <p className="text-gray-400 text-center py-8">No shop items yet. Add your first product above.</p>
               )}
+            </div>
+          </>
+        )}
+
+        {/* Messages tab */}
+        {tab === 'messages' && (
+          <>
+            {messagesLoading && <p className="text-gray-400">Loading...</p>}
+
+            {messages.length === 0 && !messagesLoading && (
+              <p className="text-gray-400 text-center py-8">No messages yet.</p>
+            )}
+
+            <div className="space-y-3">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`bg-white rounded-xl border shadow-sm p-4 ${
+                    msg.read ? 'border-gray-200' : 'border-teal-300 border-2'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-display font-bold text-gray-900">{msg.name}</span>
+                        {!msg.read && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">
+                            New
+                          </span>
+                        )}
+                        <span className="text-xs text-gray-400">
+                          {new Date(msg.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm text-gray-700 whitespace-pre-wrap">{msg.message}</p>
+                    </div>
+                    <div className="flex flex-col gap-1 flex-shrink-0">
+                      <button
+                        onClick={() => toggleMessageRead(msg.id, !msg.read)}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                          msg.read
+                            ? 'bg-teal-100 text-teal-700 hover:bg-teal-200'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {msg.read ? 'Mark Unread' : 'Mark Read'}
+                      </button>
+                      <button
+                        onClick={() => deleteMessage(msg.id)}
+                        className="px-3 py-1.5 bg-red-100 text-red-700 text-xs font-bold rounded-lg hover:bg-red-200 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </>
         )}
