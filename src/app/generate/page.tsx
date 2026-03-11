@@ -322,10 +322,10 @@ export default function GeneratePage() {
                 </p>
               </div>
 
-              {/* Nickname input */}
+              {/* Name input (mandatory) */}
               <div className="mb-2">
                 <label htmlFor="nickname" className="block text-sm font-bold text-gray-600 mb-1">
-                  Nickname <span className="font-normal text-gray-400">(optional)</span>
+                  Name your critter!
                 </label>
                 <input
                   id="nickname"
@@ -336,8 +336,11 @@ export default function GeneratePage() {
                   className="w-full rounded-xl border-2 border-gray-200 px-4 py-2 text-gray-800 font-medium
                              focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100
                              transition-colors"
-                  placeholder="Give your critter a nickname..."
+                  placeholder="What do you want to call it?"
                 />
+                <p className="text-xs text-gray-400 mt-1">
+                  This is the name that goes on the certificate!
+                </p>
               </div>
             </div>
 
@@ -349,7 +352,7 @@ export default function GeneratePage() {
                   }
                   setStep('rolling')
                 }}
-                disabled={!correctedType.trim()}
+                disabled={!correctedType.trim() || !nickname.trim()}
                 className="px-10 py-4 bg-gradient-to-r from-sky-400 to-blue-500 text-white text-lg
                            font-display font-bold rounded-2xl shadow-lg shadow-sky-200
                            hover:shadow-xl hover:shadow-sky-300 hover:scale-105

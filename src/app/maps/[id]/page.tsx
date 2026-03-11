@@ -22,8 +22,8 @@ export default async function MapDetailPage({ params }: MapDetailPageProps) {
   const obstacleCount = map.grid.flat().filter(c => c === 1).length
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-teal-50 to-cyan-50 bg-dots py-8 px-4 print:bg-white print:py-2">
-      <div className="mx-auto max-w-xl">
+    <div className="map-print-page min-h-screen bg-gradient-to-b from-emerald-50 via-teal-50 to-cyan-50 bg-dots py-8 px-4 print:bg-white print:py-2">
+      <div className="mx-auto max-w-xl print:max-w-none">
         {/* Back link */}
         <Link
           href="/maps"
@@ -36,7 +36,7 @@ export default async function MapDetailPage({ params }: MapDetailPageProps) {
         </Link>
 
         {/* Map card */}
-        <div className="bg-white rounded-2xl shadow-lg border-2 border-emerald-200 p-5 sm:p-6 animate-pop">
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-emerald-200 p-5 sm:p-6 animate-pop print:shadow-none print:border-0 print:rounded-none print:p-0">
           {/* Title */}
           <div className="text-center mb-4">
             <h1 className="font-display text-3xl sm:text-4xl font-bold text-gray-900">
@@ -50,15 +50,15 @@ export default async function MapDetailPage({ params }: MapDetailPageProps) {
             </div>
           </div>
 
-          {/* Grid — responsive cell sizing */}
+          {/* Grid — responsive cell sizing, large on print for playable maps */}
           <div className="flex justify-center mb-4">
-            <div className="inline-block border-2 border-gray-800 rounded-lg overflow-hidden">
+            <div className="map-grid-container inline-block border-2 border-gray-800 rounded-lg overflow-hidden print:rounded-none print:border print:border-black">
               {map.grid.map((row, rowIdx) => (
                 <div key={rowIdx} className="flex">
                   {row.map((cell, colIdx) => (
                     <div
                       key={colIdx}
-                      className={`w-8 h-8 sm:w-10 sm:h-10 border border-gray-300/60 ${TERRAIN_COLORS[cell] ?? 'bg-white'}`}
+                      className={`map-cell w-8 h-8 sm:w-10 sm:h-10 border border-gray-300/60 ${TERRAIN_COLORS[cell] ?? 'bg-white'}`}
                     />
                   ))}
                 </div>
@@ -67,7 +67,7 @@ export default async function MapDetailPage({ params }: MapDetailPageProps) {
           </div>
 
           {/* Legend */}
-          <div className="flex flex-wrap justify-center gap-3 text-xs font-medium text-gray-500 mb-4">
+          <div className="map-legend flex flex-wrap justify-center gap-3 text-xs font-medium text-gray-500 mb-4">
             {legendEntries.map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <span className={`w-4 h-4 rounded-sm border border-gray-300 inline-block ${TERRAIN_COLORS[t]}`} />
@@ -78,7 +78,7 @@ export default async function MapDetailPage({ params }: MapDetailPageProps) {
 
           {/* Rules section */}
           {map.rules && map.rules.length > 0 && (
-            <div className="space-y-2 mb-4">
+            <div className="map-rules space-y-2 mb-4">
               <h2 className="font-display font-bold text-sm uppercase tracking-wide text-gray-400 text-center">
                 Special Rules
               </h2>

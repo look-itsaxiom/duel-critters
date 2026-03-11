@@ -46,17 +46,19 @@ Respond with ONLY valid JSON. If the image is NOT a valid critter:
 If the image IS a valid critter:
 {
   "valid": true,
-  "name": "A short unique proper name, 1-2 words max (e.g., 'Blitz', 'Fangsworth', 'Clover')",
+  "name": "A creative proper name (see naming rules below)",
   "creatureType": "the animal type in lowercase (e.g., 'triceratops', 'chicken', 'capybara')",
   "characteristics": ["3-5 physical traits like 'horned', 'winged', 'four-legged', 'translucent', 'small"]
 }
 
-IMPORTANT name rules:
-- The name is a PROPER NAME for this individual critter, NOT a description of what it is.
+NAMING RULES — READ CAREFULLY:
+- The name is a PROPER NAME for this individual critter, NOT a description.
 - Maximum 12 characters. One or two words only.
-- Think pet names, RPG character names, or mythical creature names.
-- Good: "Blitz", "Fangsworth", "Clover", "Spike", "Nimbus", "Rex", "Zara"
-- Bad: "Sparkly Pink Spider", "Big Fluffy Bear", "Small Green Frog" (these are descriptions, not names)`,
+- NEVER pick obvious color-based or species-based names. Be surprising and creative!
+- BANNED predictable names: Clover, Fern, Ivy (for green), Blaze, Ember, Flame (for red/fire), Shadow, Midnight, Onyx (for dark), Frost, Crystal, Snowflake (for white/ice), Spike, Fang (for spiky things). These are boring.
+- Draw from diverse styles: mythological (Korra, Theron, Odin), playful (Wobbles, Biscuit, Gumbo), fierce (Vex, Razak, Grit), cute (Mochi, Pip, Noodle), regal (Duchess, Baron, Czar), mysterious (Hex, Vesper, Riddle), silly (Nugget, Pickle, Kazoo)
+- The name should feel like a CHARACTER, not a category. Two identical-looking green frogs should get completely different names.
+- Bad: "Sparkly Pink Spider", "Big Fluffy Bear" (descriptions, not names)`,
     },
   ])
 
@@ -103,9 +105,22 @@ ABILITY DESIGN RULES:
 1. Be thematically tied to the creature (turtle = defensive, hawk = mobility, fox = trickery)
 2. Explainable in 2 kid-friendly sentences MAX
 3. Only reference game concepts: grid squares, HP, ATK, SPD, adjacency, line of sight, obstacles, bases, turns
-4. Respect the magnitude number (higher = more powerful)
+4. Respect the magnitude number — use the BALANCE TABLE below for exact numbers
 5. Trackable by kids on a physical board with no extra tokens
 6. The description MUST state the cost ("Instead of attacking..." or "Once per game..." or state the passive bonus)
+
+BALANCE GUIDELINES — follow the number ranges, but be CREATIVE with the flavor and mechanics:
+- Magnitude 1: Passive only. A small flat bonus: +1 to one stat OR take 1 less damage (min 1). Keep it simple.
+- Magnitude 2: Passive OR a weak attack replacement. Numbers: deal up to 2 damage, move up to 1 extra square, reach up to 2 squares, push/pull 1 square.
+- Magnitude 3: Attack replacement OR defensive trade. Numbers: deal 2-3 damage, reduce damage by 2, move up to 2 extra squares, push/pull up to 2 squares, reach up to 3 squares. Can combine ONE movement effect with ONE damage effect.
+- Magnitude 4: Stronger attack replacement OR defensive trade. Numbers: deal 2-3 damage to multiple adjacent targets, reduce damage by 3, move up to 3 extra squares + deal 2 damage. Can affect up to 2 targets.
+- Magnitude 5: Once per game ONLY. Powerful single effect. Numbers: deal up to 4 damage, heal up to 4 HP, move unlimited in a line, swap positions, make 2 attacks. Pick ONE effect — never combine.
+
+IMPORTANT — VARIETY RULES:
+- Do NOT default to generic stat bonuses like "+1 SPD" or "+1 damage" unless the creature truly has nothing more interesting going on.
+- Every creature has a PERSONALITY. A spider's mag 2 should feel totally different from a rabbit's mag 2. Use the creature's body, behavior, and habitat for inspiration.
+- Think about WHAT the creature does, not just the numbers: a frog LEAPS, a turtle WITHDRAWS, a spider TRAPS, a wolf HOWLS, an owl SWOOPS, a shark CIRCLES. Build the ability around the creature's signature move.
+- Avoid repeating the same ability structure. If the last ability was "deal X damage to adjacent enemy and push them," the next one should use a completely different structure.
 
 ALLOWED MECHANICS:
 - Flat number bonuses/penalties ("+2 damage", "-1 damage taken this turn")

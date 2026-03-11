@@ -24,10 +24,7 @@ export default function BattleCard({ critter, qrDataUrl }: BattleCardProps) {
       {/* Header: name + stars */}
       <div className="bg-amber-600 text-white px-2 py-1 flex items-center justify-between">
         <div className="truncate">
-          <span className="font-bold text-sm" style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}>{critter.name}</span>
-          {critter.nickname && (
-            <span className="text-amber-200 text-[9px] italic ml-1">&ldquo;{critter.nickname}&rdquo;</span>
-          )}
+          <span className="font-bold text-sm" style={{ fontFamily: 'var(--font-fredoka), sans-serif' }}>{critter.nickname || critter.name}</span>
         </div>
         <span className="text-yellow-200 text-xs whitespace-nowrap ml-1">
           {starString(critter.starLevel)}

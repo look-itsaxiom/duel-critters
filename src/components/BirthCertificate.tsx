@@ -23,7 +23,7 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
   })
 
   return (
-    <div className="birth-cert border-4 border-double border-amber-700 rounded-2xl p-6 bg-amber-50 max-w-lg mx-auto print:p-2">
+    <div className="birth-cert border-4 border-double border-amber-700 rounded-2xl p-6 bg-amber-50 max-w-lg mx-auto print:p-2 print:max-w-md">
       {/* Title */}
       <div className="text-center mb-4 print:mb-1">
         <h1 className="font-display text-2xl font-bold tracking-wide text-amber-900 uppercase print:text-sm">
@@ -40,11 +40,11 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
         This certifies that
       </p>
       <h2 className="font-display text-center text-3xl font-bold text-amber-800 mb-1 print:text-lg">
-        {critter.name}
+        {critter.nickname || critter.name}
       </h2>
       {critter.nickname && (
         <p className="text-center text-sm text-amber-600 italic mb-1">
-          &ldquo;{critter.nickname}&rdquo;
+          a.k.a. &ldquo;{critter.name}&rdquo;
         </p>
       )}
       <p className="text-center text-xl text-amber-500 mb-4 print:mb-1 print:text-base">
@@ -52,16 +52,16 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
       </p>
 
       {/* Critter photo */}
-      <div className="flex justify-center mb-4 print:mb-1">
+      <div className="flex justify-center mb-4 print:mb-0.5">
         <img
           src={critter.photoUrl}
           alt={critter.name}
-          className="critter-photo w-40 h-40 object-cover rounded-lg border-2 border-amber-300 shadow-md print:w-20 print:h-20"
+          className="critter-photo w-40 h-40 object-cover rounded-lg border-2 border-amber-300 shadow-md print:w-16 print:h-16"
         />
       </div>
 
       {/* Creature type and characteristics */}
-      <div className="text-center mb-4 print:mb-1">
+      <div className="text-center mb-4 print:mb-0.5">
         <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide print:text-xs">
           {critter.creatureType}
         </span>
@@ -73,7 +73,7 @@ export default function BirthCertificate({ critter, qrDataUrl }: BirthCertificat
       </div>
 
       {/* Registration date */}
-      <p className="text-center text-xs text-gray-500 mb-4 print:mb-1">
+      <p className="text-center text-xs text-gray-500 mb-4 print:mb-0.5">
         Registered on {registrationDate}
       </p>
 
