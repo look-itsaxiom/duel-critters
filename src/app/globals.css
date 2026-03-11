@@ -245,4 +245,17 @@ body {
     background: white !important;
     background-image: none !important;
   }
+
+  /* === INVITE CARD PRINT LAYOUT === */
+  .invite-sheet {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .invite-card {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+  }
 }
