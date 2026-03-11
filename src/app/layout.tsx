@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import Link from "next/link";
+import SupportButton from "@/components/SupportButton";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -68,6 +69,7 @@ export default function RootLayout({
         </nav>
 
         {children}
+        <SupportButton />
       </body>
     </html>
   );
